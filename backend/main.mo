@@ -3,11 +3,12 @@ import Runtime "mo:core/Runtime";
 import Time "mo:core/Time";
 import Text "mo:core/Text";
 import Principal "mo:core/Principal";
-
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
+import Migration "migration";
 
+(with migration = Migration.run)
 actor {
   // Use RBAC system for authorization
   let accessControlState = AccessControl.initState();
@@ -62,6 +63,7 @@ actor {
     wineStyle : WineStyle;
     price : Text;
     createdAt : Time.Time;
+    soldOut : Bool;
   };
 
   let wines = Map.empty<Text, Wine>();
@@ -82,6 +84,7 @@ actor {
     grapeVariety : ?Text,
     wineStyle : WineStyle,
     price : Text,
+    soldOut : Bool,
   ) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add wines");
@@ -99,6 +102,7 @@ actor {
       wineStyle;
       price;
       createdAt = Time.now();
+      soldOut;
     };
     wines.add(id, newWine);
   };
@@ -112,6 +116,7 @@ actor {
     grapeVariety : ?Text,
     wineStyle : WineStyle,
     price : Text,
+    soldOut : Bool,
   ) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can update wines");
@@ -131,6 +136,7 @@ actor {
           wineStyle;
           price;
           createdAt = existingWine.createdAt;
+          soldOut;
         };
         wines.add(id, updatedWine);
       };
@@ -163,6 +169,7 @@ actor {
         wineStyle = #red;
         price = "150 HRK";
         createdAt = Time.now();
+        soldOut = false;
       },
       {
         id = "hr-2";
@@ -174,6 +181,7 @@ actor {
         wineStyle = #white;
         price = "90 HRK";
         createdAt = Time.now();
+        soldOut = false;
       },
       {
         id = "hr-3";
@@ -185,6 +193,7 @@ actor {
         wineStyle = #red;
         price = "250 HRK";
         createdAt = Time.now();
+        soldOut = false;
       },
       {
         id = "it-1";
@@ -196,6 +205,7 @@ actor {
         wineStyle = #red;
         price = "100 EUR";
         createdAt = Time.now();
+        soldOut = false;
       },
       {
         id = "it-2";
@@ -207,6 +217,7 @@ actor {
         wineStyle = #red;
         price = "200 EUR";
         createdAt = Time.now();
+        soldOut = false;
       },
       {
         id = "it-3";
@@ -218,6 +229,7 @@ actor {
         wineStyle = #red;
         price = "25 EUR";
         createdAt = Time.now();
+        soldOut = false;
       },
     ];
 

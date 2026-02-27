@@ -13,6 +13,7 @@ import { Pencil, Trash2, Plus, Wine, AlertCircle, FileDown, Loader2 } from 'luci
 import { useGetAllWines, useAddWine, useUpdateWine, useDeleteWine } from '../hooks/useQueries';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import WineFormModal from './WineFormModal';
+import type { WineFormData } from './WineFormModal';
 import DeleteWineDialog from './DeleteWineDialog';
 import type { Wine as WineType } from '../backend';
 import { WineStyle } from '../backend';
@@ -48,16 +49,6 @@ function wineStyleDotColor(style: WineStyle): string {
     case WineStyle.petNat: return 'bg-amber-200 border border-amber-400';
     default: return 'bg-muted';
   }
-}
-
-interface WineFormData {
-  country: string;
-  region: string;
-  winery: string;
-  wineName: string;
-  grapeVariety: string;
-  wineStyle: WineStyle;
-  price: string;
 }
 
 // Dynamically load a script from CDN and return a promise
@@ -107,6 +98,8 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
   const oliveR = 74, oliveG = 93, oliveB = 35;
   const creamR = 250, creamG = 247, creamB = 240;
   const lightOliveR = 237, lightOliveG = 240, lightOliveB = 225;
+  // Sold out color: muted red
+  const soldOutR = 180, soldOutG = 50, soldOutB = 50;
 
   const pageWidth = doc.internal.pageSize.getWidth();
   const marginLeft = 14;
@@ -118,7 +111,6 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
   // Try to embed logo
   try {
     const logoBase64 = await loadImageAsBase64('/assets/generated/naturavini-logo.dim_400x120.png');
-    // Logo dimensions: keep aspect ratio, max height 18mm
     const logoMaxH = 18;
     const logoMaxW = 60;
     const naturalW = 400, naturalH = 120;
@@ -170,7 +162,7 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
     doc.text(wineCount, pageWidth - marginRight - 3, currentY + 4.8, { align: 'right' });
     currentY += 7;
 
-    // Table rows
+    // Table rows — wine name gets "SOLD OUT" appended if applicable
     const tableBody = countryWines.map((wine) => [
       wine.winery,
       wine.wineName,
@@ -178,12 +170,13 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
       wine.grapeVariety ?? '—',
       wine.region ?? '—',
       wine.price,
+      wine.soldOut ? 'SOLD OUT' : '',
     ]);
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (doc as any).autoTable({
       startY: currentY,
-      head: [['Winery', 'Wine Name', 'Style', 'Grape Variety', 'Region', 'Price']],
+      head: [['Winery', 'Wine Name', 'Style', 'Grape Variety', 'Region', 'Price', '']],
       body: tableBody,
       margin: { left: marginLeft, right: marginRight },
       tableWidth: contentWidth,
@@ -210,12 +203,29 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
         fillColor: [255, 255, 255],
       },
       columnStyles: {
-        0: { cellWidth: 32 },
-        1: { cellWidth: 38 },
-        2: { cellWidth: 22 },
-        3: { cellWidth: 32 },
-        4: { cellWidth: 28 },
+        0: { cellWidth: 30 },
+        1: { cellWidth: 35 },
+        2: { cellWidth: 20 },
+        3: { cellWidth: 28 },
+        4: { cellWidth: 24 },
         5: { cellWidth: 'auto', halign: 'right', fontStyle: 'bold', textColor: [oliveR, oliveG, oliveB] },
+        6: { cellWidth: 20, halign: 'center', fontStyle: 'bold', textColor: [soldOutR, soldOutG, soldOutB], fontSize: 7 },
+      },
+      // Color sold-out rows slightly
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      didParseCell: (data: any) => {
+        if (data.section === 'body' && data.column.index === 6 && data.cell.raw === 'SOLD OUT') {
+          data.cell.styles.textColor = [soldOutR, soldOutG, soldOutB];
+          data.cell.styles.fontStyle = 'bold';
+          data.cell.styles.fontSize = 7;
+        }
+        // Dim the wine name text for sold-out rows
+        if (data.section === 'body' && data.column.index === 1) {
+          const rowData = data.row.raw as string[];
+          if (rowData[6] === 'SOLD OUT') {
+            data.cell.styles.textColor = [160, 140, 120];
+          }
+        }
       },
       didDrawPage: () => {
         // Footer on each page
@@ -262,8 +272,6 @@ export default function WineTable() {
   const [isExporting, setIsExporting] = useState(false);
 
   // Group wines by country, sorted alphabetically.
-  // Use a normalized key (trimmed, lowercased) to avoid duplicate sections
-  // caused by subtle differences in country name casing or whitespace.
   const grouped = useMemo(() => {
     const map = new Map<string, { displayName: string; wines: WineType[] }>();
 
@@ -284,7 +292,6 @@ export default function WineTable() {
       );
     }
 
-    // Return sorted array of [displayName, wines[]]
     return Array.from(map.values())
       .sort((a, b) => a.displayName.localeCompare(b.displayName))
       .map((entry): [string, WineType[]] => [entry.displayName, entry.wines]);
@@ -315,6 +322,7 @@ export default function WineTable() {
         grapeVariety: data.grapeVariety.trim() || null,
         wineStyle: data.wineStyle,
         price: data.price,
+        soldOut: data.soldOut,
       });
       setAddOpen(false);
     } catch (err: unknown) {
@@ -336,6 +344,7 @@ export default function WineTable() {
         grapeVariety: data.grapeVariety.trim() || null,
         wineStyle: data.wineStyle,
         price: data.price,
+        soldOut: data.soldOut,
       });
       setEditWine(null);
     } catch (err: unknown) {
@@ -386,7 +395,6 @@ export default function WineTable() {
     <div className="space-y-2">
       {/* Action bar */}
       <div className="flex items-center justify-between mb-4 gap-2">
-        {/* Export PDF button — always visible when there are wines */}
         {grouped.length > 0 && (
           <Button
             onClick={handleExportPDF}
@@ -403,10 +411,8 @@ export default function WineTable() {
           </Button>
         )}
 
-        {/* Spacer when no export button */}
         {grouped.length === 0 && <div />}
 
-        {/* Add button — only for admins */}
         {isAdmin && (
           <Button
             onClick={() => { setMutationError(null); setAddOpen(true); }}
@@ -457,12 +463,13 @@ export default function WineTable() {
                 <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[15%]">
                   Grape
                 </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[15%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[13%]">
                   Region
                 </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right w-[12%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right w-[10%]">
                   Price
                 </TableHead>
+                <TableHead className="w-[8%]" />
                 {isAdmin && (
                   <TableHead className="w-[90px]" />
                 )}
@@ -470,7 +477,10 @@ export default function WineTable() {
             </TableHeader>
             <TableBody>
               {countryWines.map((wine) => (
-                <TableRow key={wine.id} className="wine-row bg-card">
+                <TableRow
+                  key={wine.id}
+                  className={`wine-row bg-card ${wine.soldOut ? 'opacity-70' : ''}`}
+                >
                   <TableCell className="font-medium text-foreground py-3.5 font-serif">
                     {wine.winery}
                   </TableCell>
@@ -491,6 +501,14 @@ export default function WineTable() {
                   </TableCell>
                   <TableCell className="text-right font-semibold text-accent py-3.5 tabular-nums">
                     {wine.price}
+                  </TableCell>
+                  {/* Sold Out badge column */}
+                  <TableCell className="py-3.5">
+                    {wine.soldOut && (
+                      <span className="inline-flex items-center rounded-sm border border-destructive/40 bg-destructive/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive leading-none whitespace-nowrap">
+                        Sold Out
+                      </span>
+                    )}
                   </TableCell>
                   {isAdmin && (
                     <TableCell className="py-3.5">
@@ -526,7 +544,7 @@ export default function WineTable() {
       {/* Mutation error banner */}
       {mutationError && (
         <div className="flex items-center gap-3 text-destructive bg-destructive/10 px-4 py-3 rounded-md mt-2">
-          <AlertCircle className="h-5 w-5 flex-shrink-0" />
+          <AlertCircle className="h-4 w-4 flex-shrink-0" />
           <p className="text-sm">{mutationError}</p>
         </div>
       )}
@@ -545,8 +563,8 @@ export default function WineTable() {
         open={!!editWine}
         onClose={() => { setEditWine(null); setMutationError(null); }}
         onSubmit={handleEdit}
-        isLoading={updateWine.isPending}
         initialData={editWine}
+        isLoading={updateWine.isPending}
         error={mutationError}
       />
 

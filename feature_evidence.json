@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-fix-the-pdf-export-in-frontend-src-components-winetable-tsx-so-that-wines-are-correctly-grouped-by-country-each-country-appears-only-once-with-all-its-wines-listed-under-it-the-current-bug-causes-wines-from-the-same-country-to-appear-in-separate-repeated-sections-e-g-italy-appears-twice-each-with-one-wine-instead-of-being-merged-into-one-group",
-      "featureTitle": "Fix the PDF export in frontend/src/components/WineTable.tsx so that wines are correctly grouped by country (each country appears only once, with all its wines listed under it). The current bug causes wines from the same country to appear in separate repeated sections (e.g. Italy appears twice, each with one wine instead of being merged into one group).",
+      "featureId": "feature-add-a-sold-out-checkbox-toggle-to-the-add-edit-wine-modal-form-frontend-src-components-wineformmodal-tsx-the-field-should-be-placed-near-the-bottom-of-the-form-before-the-submit-button-labelled-sold-out-it-must-be-included-in-the-form-submission-payload-sent-to-the-backend",
+      "featureTitle": "Add a 'Sold Out' checkbox/toggle to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be placed near the bottom of the form before the submit button, labelled 'Sold Out'. It must be included in the form submission payload sent to the backend.",
       "files": [
-        "frontend/src/components/WineTable.tsx"
+        "frontend/src/components/WineFormModal.tsx"
       ],
       "components": [
         "authorization@4.0.0",
@@ -17,13 +17,13 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-21"
+        "REQ-24"
       ],
       "confidence": "high"
     },
     {
-      "featureId": "feature-fix-the-pdf-export-in-frontend-src-components-winetable-tsx-so-that-the-naturavini-logo-image-stored-at-frontend-public-assets-generated-naturavini-logo-png-is-rendered-at-the-top-of-the-exported-pdf-above-the-wine-catalogue-content-reflecting-the-brand-s-visual-identity",
-      "featureTitle": "Fix the PDF export in frontend/src/components/WineTable.tsx so that the Naturavini logo image (stored at frontend/public/assets/generated/naturavini-logo.png) is rendered at the top of the exported PDF, above the wine catalogue content, reflecting the brand's visual identity.",
+      "featureId": "feature-in-the-wine-list-table-frontend-src-components-winetable-tsx-display-a-visible-sold-out-badge-or-label-on-each-wine-row-where-soldout-is-true-the-indicator-should-be-styled-consistently-with-the-naturavini-brand-e-g-a-small-tangerine-orange-or-muted-red-pill-tag-with-the-text-sold-out-placed-in-or-near-the-wine-name-column",
+      "featureTitle": "In the wine list table (frontend/src/components/WineTable.tsx), display a visible 'Sold Out' badge or label on each wine row where soldOut is true. The indicator should be styled consistently with the Naturavini brand (e.g. a small tangerine-orange or muted red pill/tag with the text 'Sold Out'), placed in or near the Wine Name column.",
       "files": [
         "frontend/src/components/WineTable.tsx"
       ],
@@ -37,7 +37,27 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-22"
+        "REQ-25"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-update-the-pdf-export-in-frontend-src-components-winetable-tsx-so-that-wines-marked-as-soldout-display-a-sold-out-text-marker-or-stamp-next-to-their-entry-in-the-exported-pdf-the-marker-should-be-visually-distinct-e-g-bold-coloured-or-in-parentheses-so-it-is-clearly-identifiable-in-the-printed-catalogue",
+      "featureTitle": "Update the PDF export in frontend/src/components/WineTable.tsx so that wines marked as soldOut display a 'SOLD OUT' text marker or stamp next to their entry in the exported PDF. The marker should be visually distinct (e.g. bold, coloured, or in parentheses) so it is clearly identifiable in the printed catalogue.",
+      "files": [
+        "frontend/src/components/WineTable.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0"
+      ],
+      "testIds": [
+        "REQ-26"
       ],
       "confidence": "high"
     }

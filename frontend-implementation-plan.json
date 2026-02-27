@@ -1,37 +1,54 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Fix PDF export: correct grouping/data rendering and add Naturavini logo",
+  "title": "Add 'Sold Out' flag to wines — form toggle, table indicator, and PDF marker",
   "requirements": [
     {
-      "id": "REQ-21",
-      "summary": "Fix PDF export wine grouping so each country appears exactly once with all its wines listed together under it",
+      "id": "REQ-24",
+      "summary": "Add 'Sold Out' checkbox to the Add/Edit Wine modal form",
       "acceptanceCriteria": [
-        "Exported PDF groups all wines by country, with each country name appearing exactly once as a section header.",
-        "All wines belonging to the same country are listed together under their country section in the PDF.",
-        "The grouping logic in the PDF export matches the grouping logic used in the WineTable display on screen."
+        "The Add/Edit Wine modal displays a 'Sold Out' checkbox or toggle.",
+        "The field is pre-populated correctly when editing an existing wine.",
+        "Submitting the form with 'Sold Out' checked saves the flag to the backend.",
+        "Submitting with it unchecked saves false."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/WineTable.tsx",
+          "path": "frontend/src/components/WineFormModal.tsx",
           "operation": "modify",
-          "description": "Fix the PDF export function's wine grouping logic to ensure wines are correctly grouped by country. Currently, wines from the same country are appearing in separate repeated sections (e.g., Italy appears twice). Modify the data preparation logic before calling autoTable to properly consolidate all wines under their respective country headers, ensuring each country name appears exactly once as a section header with all its wines listed beneath it. The fix should align the PDF grouping logic with the on-screen table grouping behavior."
+          "description": "Add a 'Sold Out' checkbox field to the wine form. Place it near the bottom of the form, before the submit button. Include it in the form state and submission payload. When editing an existing wine, pre-populate the checkbox with the wine's soldOut value. Ensure the field is sent to the backend via addWine or updateWine as defined in the backend interface (backend.d.ts)."
         }
       ]
     },
     {
-      "id": "REQ-22",
-      "summary": "Add Naturavini logo to the top of exported PDF above wine catalogue content",
+      "id": "REQ-25",
+      "summary": "Display 'Sold Out' badge in the wine list table",
       "acceptanceCriteria": [
-        "The exported PDF includes the Naturavini logo image at the top of the first page.",
-        "The logo is loaded from frontend/public/assets/generated/naturavini-logo.png and embedded correctly in the PDF output.",
-        "The logo appears above the wine catalogue table content and is appropriately sized."
+        "Wines marked as sold out display a clearly visible 'Sold Out' badge in the table.",
+        "Wines not marked as sold out show no badge.",
+        "The badge styling is consistent with the Naturavini brand palette."
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/WineTable.tsx",
           "operation": "modify",
-          "description": "Modify the PDF export function to load and embed the Naturavini logo image from frontend/public/assets/generated/naturavini-logo.dim_400x120.png at the top of the PDF document, above the wine catalogue table content. Use jsPDF's addImage method to embed the logo with appropriate sizing and positioning. Ensure the logo is loaded as a data URL or base64 string for embedding in the client-side PDF generation process."
+          "description": "Add a 'Sold Out' badge/label to each wine row where soldOut is true. Display the badge in or near the Wine Name column. Style it as a small pill/tag using the tangerine-orange color from the brand palette (or a muted red). Use consistent spacing and typography. Wines with soldOut = false should show no badge."
+        }
+      ]
+    },
+    {
+      "id": "REQ-26",
+      "summary": "Add 'SOLD OUT' marker to PDF export for sold-out wines",
+      "acceptanceCriteria": [
+        "Wines with soldOut = true show a 'SOLD OUT' marker in their PDF row.",
+        "Wines with soldOut = false show no marker.",
+        "The marker is visually distinct from regular cell text in the PDF."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WineTable.tsx",
+          "operation": "modify",
+          "description": "Update the PDF export logic (using jsPDF) to include a 'SOLD OUT' text marker for wines where soldOut is true. Add the marker next to the wine entry (e.g., in parentheses after the wine name or as a separate annotation). Make the marker visually distinct by using bold text, a different color, or special formatting. Wines with soldOut = false should have no marker in the PDF."
         }
       ]
     }

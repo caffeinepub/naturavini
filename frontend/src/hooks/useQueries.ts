@@ -34,6 +34,7 @@ export function useAddWine() {
       grapeVariety: string | null;
       wineStyle: WineStyle;
       price: string;
+      soldOut: boolean;
     }) => {
       if (!actor) throw new Error('Actor not available');
       await actor.addWine(
@@ -45,6 +46,7 @@ export function useAddWine() {
         wine.grapeVariety,
         wine.wineStyle,
         wine.price,
+        wine.soldOut,
       );
     },
     onSuccess: () => {
@@ -73,6 +75,7 @@ export function useUpdateWine() {
       grapeVariety: string | null;
       wineStyle: WineStyle;
       price: string;
+      soldOut: boolean;
     }) => {
       if (!actor) throw new Error('Actor not available');
       await actor.updateWine(
@@ -84,6 +87,7 @@ export function useUpdateWine() {
         wine.grapeVariety,
         wine.wineStyle,
         wine.price,
+        wine.soldOut,
       );
     },
     onSuccess: () => {

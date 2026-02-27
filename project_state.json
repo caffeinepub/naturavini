@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 15,
+  "projectStateVersion": 17,
   "summary": "Building a Naturavini wine price list app, starting with a simplified version: basic wine list table with country, winery, wine name, and price, plus add/edit/delete functionality. More features to be added incrementally.",
   "architectural_notes": [
     "Build incrementally: start with basic table and CRUD, then layer in language toggle, PDF export, and styling"
@@ -12,7 +12,7 @@
     "Version 5: all added wines are lost (data not persisting) and Add Wine functionality is broken — wines cannot be added",
     "PDF export is broken: same data/rendering issue as the modal, and the Naturavini logo is missing from the PDF output"
   ],
-  "isFixRequest": true,
+  "isFixRequest": false,
   "existing_features": [
     {
       "id": "feature-build-a-frontend-wine-list-table-that-displays-all-wines-grouped-by-country-with-columns-winery-wine-name-and-price-the-table-must-be-readable-and-well-structured",
@@ -149,6 +149,30 @@
         "REQ-22"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-add-a-sold-out-checkbox-toggle-to-the-add-edit-wine-modal-form-frontend-src-components-wineformmodal-tsx-the-field-should-be-placed-near-the-bottom-of-the-form-before-the-submit-button-labelled-sold-out-it-must-be-included-in-the-form-submission-payload-sent-to-the-backend",
+      "title": "Add a 'Sold Out' checkbox/toggle to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be placed near the bottom of the form before the submit button, labelled 'Sold Out'. It must be included in the form submission payload sent to the backend.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-wine-list-table-frontend-src-components-winetable-tsx-display-a-visible-sold-out-badge-or-label-on-each-wine-row-where-soldout-is-true-the-indicator-should-be-styled-consistently-with-the-naturavini-brand-e-g-a-small-tangerine-orange-or-muted-red-pill-tag-with-the-text-sold-out-placed-in-or-near-the-wine-name-column",
+      "title": "In the wine list table (frontend/src/components/WineTable.tsx), display a visible 'Sold Out' badge or label on each wine row where soldOut is true. The indicator should be styled consistently with the Naturavini brand (e.g. a small tangerine-orange or muted red pill/tag with the text 'Sold Out'), placed in or near the Wine Name column.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-pdf-export-in-frontend-src-components-winetable-tsx-so-that-wines-marked-as-soldout-display-a-sold-out-text-marker-or-stamp-next-to-their-entry-in-the-exported-pdf-the-marker-should-be-visually-distinct-e-g-bold-coloured-or-in-parentheses-so-it-is-clearly-identifiable-in-the-printed-catalogue",
+      "title": "Update the PDF export in frontend/src/components/WineTable.tsx so that wines marked as soldOut display a 'SOLD OUT' text marker or stamp next to their entry in the exported PDF. The marker should be visually distinct (e.g. bold, coloured, or in parentheses) so it is clearly identifiable in the printed catalogue.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -262,6 +286,20 @@
       "id": "AR-21",
       "summary": "Fix PDF export: same issue as the modal (likely a rendering/data bug), and the PDF is missing the Naturavini logo — logo must appear at the top of the exported PDF",
       "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Add a 'Sold Out' flag/indicator to wines — togglable in the Add/Edit wine form, displayed visually on the wine list table in the app, and shown in the PDF export.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-23",
+      "summary": "Add a 'soldOut' boolean field to the Wine data model in backend/main.mo. Update addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be false for existing and new wines.",
+      "reqIds": [
+        "REQ-23"
+      ],
       "status": "pending"
     }
   ],

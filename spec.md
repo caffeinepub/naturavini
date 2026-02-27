@@ -1,10 +1,13 @@
 # Specification
 
 ## Summary
-**Goal:** Fix two bugs in the PDF export of the Naturavini Wine Price List: incorrect country grouping and missing logo.
+**Goal:** Add a "Sold Out" flag to wines that can be toggled in the edit form, displayed as a badge in the wine table, and shown as a marker in the PDF export.
 
 **Planned changes:**
-- Fix the PDF export grouping logic in `WineTable.tsx` so that wines from the same country are merged into a single section (e.g. Italy appears only once with all its wines), matching the intended on-screen grouping behavior.
-- Add the Naturavini logo (`frontend/public/assets/generated/naturavini-logo.png`) to the top of the exported PDF, above the wine catalogue content.
+- Add a `soldOut` boolean field to the Wine data model in the backend, with a default of `false` for all existing and new wines
+- Update `addWine` and `updateWine` backend functions to accept and store the `soldOut` field; ensure `getAllWines` returns it
+- Add a "Sold Out" checkbox/toggle to the Add/Edit Wine modal form, pre-populated when editing and included in the submission payload
+- Display a styled "Sold Out" badge (tangerine-orange or muted red pill) on wine rows where `soldOut` is true in the wine list table
+- Update the PDF export to show a visually distinct "SOLD OUT" marker next to wines where `soldOut` is true
 
-**User-visible outcome:** When the user exports the wine price list to PDF, each country appears exactly once as a section header with all its wines listed beneath it, and the Naturavini logo is displayed at the top of the PDF.
+**User-visible outcome:** Admins can mark any wine as sold out via the edit form; the sold-out status is visible as a badge in the wine table and as a clear marker in the exported PDF catalogue.

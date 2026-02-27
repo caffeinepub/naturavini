@@ -17,11 +17,12 @@ import {
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Checkbox } from '@/components/ui/checkbox';
 import { Loader2 } from 'lucide-react';
 import type { Wine } from '../backend';
 import { WineStyle } from '../backend';
 
-interface WineFormData {
+export interface WineFormData {
   country: string;
   region: string;
   winery: string;
@@ -29,6 +30,7 @@ interface WineFormData {
   grapeVariety: string;
   wineStyle: WineStyle;
   price: string;
+  soldOut: boolean;
 }
 
 interface WineFormModalProps {
@@ -57,6 +59,7 @@ const EMPTY_FORM: WineFormData = {
   grapeVariety: '',
   wineStyle: WineStyle.red,
   price: '',
+  soldOut: false,
 };
 
 export default function WineFormModal({
@@ -83,6 +86,7 @@ export default function WineFormModal({
           grapeVariety: initialData.grapeVariety ?? '',
           wineStyle: initialData.wineStyle,
           price: initialData.price,
+          soldOut: initialData.soldOut ?? false,
         });
       } else {
         setForm(EMPTY_FORM);
@@ -99,6 +103,10 @@ export default function WineFormModal({
   const handleSelectChange = (field: keyof WineFormData) => (value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setValidationError(null);
+  };
+
+  const handleSoldOutChange = (checked: boolean | 'indeterminate') => {
+    setForm((prev) => ({ ...prev, soldOut: checked === true }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -241,6 +249,28 @@ export default function WineFormModal({
               disabled={isLoading}
               className="bg-white border-border focus-visible:ring-primary"
             />
+          </div>
+
+          {/* Sold Out toggle */}
+          <div className="flex items-center gap-3 rounded-md border border-border bg-white px-4 py-3">
+            <Checkbox
+              id="soldOut"
+              checked={form.soldOut}
+              onCheckedChange={handleSoldOutChange}
+              disabled={isLoading}
+              className="data-[state=checked]:bg-destructive data-[state=checked]:border-destructive"
+            />
+            <div className="flex flex-col gap-0.5">
+              <Label
+                htmlFor="soldOut"
+                className="text-foreground font-medium text-sm cursor-pointer leading-none"
+              >
+                Mark as Sold Out
+              </Label>
+              <p className="text-muted-foreground text-xs">
+                This wine will be flagged as sold out in the list and PDF export.
+              </p>
+            </div>
           </div>
 
           {displayError && (

@@ -1,55 +1,94 @@
 {
   "kind": "build_request",
-  "title": "Fix PDF export: correct grouping/data rendering and add Naturavini logo",
-  "projectName": "Naturavini Wine Price List",
-  "priority": "high",
+  "title": "Add 'Sold Out' flag to wines — form toggle, table indicator, and PDF marker",
+  "projectName": "Natura Vini",
+  "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-21",
-      "text": "Fix the PDF export in frontend/src/components/WineTable.tsx so that wines are correctly grouped by country (each country appears only once, with all its wines listed under it). The current bug causes wines from the same country to appear in separate repeated sections (e.g. Italy appears twice, each with one wine instead of being merged into one group).",
-      "target": "frontend",
+      "id": "REQ-23",
+      "text": "Add a 'soldOut' boolean field to the Wine data model in backend/main.mo. Update addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be false for existing and new wines.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "now this happened same in the pdf file"
+          "can we ad up a sign like in the old price list that mark up if a wine is sold out may in the edit section of thewines and then shown on the app and the pdf"
         ]
       },
       "acceptanceCriteria": [
-        "Exported PDF groups all wines by country, with each country name appearing exactly once as a section header.",
-        "All wines belonging to the same country are listed together under their country section in the PDF.",
-        "The grouping logic in the PDF export matches the grouping logic used in the WineTable display on screen."
+        "The Wine record type includes a 'soldOut' boolean field.",
+        "addWine accepts a soldOut parameter and stores it.",
+        "updateWine accepts a soldOut parameter and updates it.",
+        "getAllWines returns the soldOut field for every wine.",
+        "Existing wines without the field default to soldOut = false after upgrade."
       ]
     },
     {
-      "id": "REQ-22",
-      "text": "Fix the PDF export in frontend/src/components/WineTable.tsx so that the Naturavini logo image (stored at frontend/public/assets/generated/naturavini-logo.png) is rendered at the top of the exported PDF, above the wine catalogue content, reflecting the brand's visual identity.",
+      "id": "REQ-24",
+      "text": "Add a 'Sold Out' checkbox/toggle to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be placed near the bottom of the form before the submit button, labelled 'Sold Out'. It must be included in the form submission payload sent to the backend.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-4"
         ],
         "quotes": [
-          "the pdf doesnt have the logo"
+          "may in the edit section of thewines"
         ]
       },
       "acceptanceCriteria": [
-        "The exported PDF includes the Naturavini logo image at the top of the first page.",
-        "The logo is loaded from frontend/public/assets/generated/naturavini-logo.png and embedded correctly in the PDF output.",
-        "The logo appears above the wine catalogue table content and is appropriately sized."
+        "The Add/Edit Wine modal displays a 'Sold Out' checkbox or toggle.",
+        "The field is pre-populated correctly when editing an existing wine.",
+        "Submitting the form with 'Sold Out' checked saves the flag to the backend.",
+        "Submitting with it unchecked saves false."
+      ]
+    },
+    {
+      "id": "REQ-25",
+      "text": "In the wine list table (frontend/src/components/WineTable.tsx), display a visible 'Sold Out' badge or label on each wine row where soldOut is true. The indicator should be styled consistently with the Naturavini brand (e.g. a small tangerine-orange or muted red pill/tag with the text 'Sold Out'), placed in or near the Wine Name column.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "then shown on the app"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Wines marked as sold out display a clearly visible 'Sold Out' badge in the table.",
+        "Wines not marked as sold out show no badge.",
+        "The badge styling is consistent with the Naturavini brand palette."
+      ]
+    },
+    {
+      "id": "REQ-26",
+      "text": "Update the PDF export in frontend/src/components/WineTable.tsx so that wines marked as soldOut display a 'SOLD OUT' text marker or stamp next to their entry in the exported PDF. The marker should be visually distinct (e.g. bold, coloured, or in parentheses) so it is clearly identifiable in the printed catalogue.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "and the pdf"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Wines with soldOut = true show a 'SOLD OUT' marker in their PDF row.",
+        "Wines with soldOut = false show no marker.",
+        "The marker is visually distinct from regular cell text in the PDF."
       ]
     }
   ],
   "constraints": [
-    "PDF generation must remain fully client-side using jsPDF with autoTable — no backend involvement.",
-    "Do not modify any files listed in frontend.immutablePaths.",
-    "The logo image file at frontend/public/assets/generated/naturavini-logo.png must be used as-is."
+    "Do not change the frontend/src/hooks/useActor.ts, frontend/src/hooks/useInternetIdentity.ts, frontend/src/main.tsx, or any files under frontend/src/components/ui.",
+    "Backend changes must use stable variables to ensure sold-out data persists across canister upgrades.",
+    "Generate migration.mo to handle the new soldOut field on existing wine records."
   ],
   "nonGoals": [
-    "Changing the PDF column structure or visual style beyond fixing grouping and adding the logo.",
-    "Re-implementing the PDF library or switching to a different PDF generation approach.",
-    "Fixing any issues unrelated to PDF grouping and logo display."
+    "Adding any other new wine fields beyond soldOut.",
+    "Filtering or hiding sold-out wines from the list.",
+    "Any changes to authentication or user roles."
   ],
   "imageRequirements": {
     "required": [],

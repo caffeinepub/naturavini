@@ -1,14 +1,45 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T20:50:26.131Z",
-  "summary": "The diff modifies frontend/src/components/WineTable.tsx to address both REQ-21 (correct country grouping in PDF export) and REQ-22 (Naturavini logo in PDF). The file summary confirms: 'country-grouped sections (using normalized keys to prevent duplicate country headers)' and 'PDF export with logo'. The loadImageAsBase64 function and logo embedding code are visible in the diff. The exportToPDF function receives pre-grouped data as [string, WineType[]][] which supports correct grouping. Both requirements appear to be implemented.",
-  "missing_requirements": [],
-  "hallucinated_features": [],
-  "confidence": 0.88,
+  "generatedAt": "2026-02-27T20:59:43.649Z",
+  "summary": "All four requirements (REQ-23 through REQ-26) appear to be implemented in the diff. The backend adds the soldOut boolean field, migration.mo handles existing records, the form modal includes the checkbox, the table shows a badge, and the PDF export includes a SOLD OUT marker. One minor concern is that the table shows the badge in a dedicated column rather than in or near the Wine Name column as specified in REQ-25.",
+  "missing_requirements": [
+    {
+      "id": "REQ-25",
+      "requirement": "The 'Sold Out' badge should be placed in or near the Wine Name column.",
+      "reason": "The file summary for WineTable.tsx states the badge is shown in 'a dedicated column for sold-out wines' rather than in or near the Wine Name column as specified in REQ-25.",
+      "evidence": [
+        "frontend/src/components/WineTable.tsx",
+        "frontend-file-summaries.txt"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "Sold-out rows are visually dimmed in the table",
+      "reason": "The file summary mentions 'slightly dims sold-out rows', which was not requested in any requirement. The requirements only ask for a badge/label on sold-out wines.",
+      "evidence": [
+        "frontend/src/components/WineTable.tsx",
+        "frontend-file-summaries.txt"
+      ]
+    },
+    {
+      "description": "Wine Name is styled with dimmed text in the PDF for sold-out wines",
+      "reason": "The file summary mentions 'dimmed wine name styling' in the PDF export for sold-out wines. The requirement only asked for a visually distinct SOLD OUT marker, not dimming the wine name itself.",
+      "evidence": [
+        "frontend/src/components/WineTable.tsx",
+        "frontend-file-summaries.txt"
+      ]
+    }
+  ],
+  "confidence": 0.8,
   "changed_files": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/components/WineFormModal.tsx",
     "frontend/src/components/WineTable.tsx",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]
 }

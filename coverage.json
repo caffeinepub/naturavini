@@ -1,18 +1,36 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T20:50:26.136Z",
+  "generatedAt": "2026-02-27T20:59:43.654Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 2,
-    "implemented": 2,
+    "total": 4,
+    "implemented": 3,
     "items": [
       {
-        "id": "REQ-21",
-        "summary": "Fix the PDF export in frontend/src/components/WineTable.tsx so that wines are correctly grouped by country (each country appears only once, with all its wines listed under it). The current bug causes wines from the same country to appear in separate repeated sections (e.g. Italy appears twice, each with one wine instead of being merged into one group).",
+        "id": "REQ-23",
+        "summary": "Add a 'soldOut' boolean field to the Wine data model in backend/main.mo. Update addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be false for existing and new wines.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-24",
+        "summary": "Add a 'Sold Out' checkbox/toggle to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be placed near the bottom of the form before the submit button, labelled 'Sold Out'. It must be included in the form submission payload sent to the backend.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WineFormModal.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WineFormModal.tsx"
+        ]
+      },
+      {
+        "id": "REQ-25",
+        "summary": "In the wine list table (frontend/src/components/WineTable.tsx), display a visible 'Sold Out' badge or label on each wine row where soldOut is true. The indicator should be styled consistently with the Naturavini brand (e.g. a small tangerine-orange or muted red pill/tag with the text 'Sold Out'), placed in or near the Wine Name column.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/WineTable.tsx"
@@ -22,8 +40,8 @@
         ]
       },
       {
-        "id": "REQ-22",
-        "summary": "Fix the PDF export in frontend/src/components/WineTable.tsx so that the Naturavini logo image (stored at frontend/public/assets/generated/naturavini-logo.png) is rendered at the top of the exported PDF, above the wine catalogue content, reflecting the brand's visual identity.",
+        "id": "REQ-26",
+        "summary": "Update the PDF export in frontend/src/components/WineTable.tsx so that wines marked as soldOut display a 'SOLD OUT' text marker or stamp next to their entry in the exported PDF. The marker should be visually distinct (e.g. bold, coloured, or in parentheses) so it is clearly identifiable in the printed catalogue.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/WineTable.tsx"
@@ -35,11 +53,19 @@
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/WineFormModal.tsx",
     "frontend/src/components/WineTable.tsx",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
