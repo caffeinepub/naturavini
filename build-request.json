@@ -1,141 +1,58 @@
 {
   "kind": "build_request",
-  "title": "Add Year field to wine form, display uploaded logo in page header and PDF",
-  "projectName": "Naturavini Wine List",
-  "priority": "normal",
+  "title": "Restore lost wine data and remove logo from PDF export",
+  "projectName": "Natura Vini",
+  "priority": "high",
   "requirements": [
     {
-      "id": "REQ-27",
-      "text": "Add a 'Year' (vintage year) numeric input field to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be optional, accept a 4-digit year (e.g. 2023), and be placed after the Wine Name field and before the Wine Style field. It must be included in the WineFormData interface and sent as part of the form submission payload.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "we also need to add the option for the yera in the wine add ox"
-        ]
-      },
-      "acceptanceCriteria": [
-        "A 'Year' input field appears in the Add/Edit Wine modal form",
-        "The field is optional (not required for form submission)",
-        "The field accepts a 4-digit year value",
-        "The field is positioned after the Wine Name field and before the Wine Style field",
-        "The Year value is included in the form submission payload",
-        "When editing an existing wine, the Year field is pre-populated with the stored value"
-      ]
-    },
-    {
-      "id": "REQ-28",
-      "text": "Add a 'year' optional field (nullable text or Nat) to the Wine data model in backend/main.mo. Update the addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be null/empty for existing wines.",
+      "id": "REQ-38",
+      "text": "Restore the wine entries previously inserted by the user that were lost. Re-populate the backend with the wines that were added before the data loss, ensuring they appear in the wine list on load. If the exact wine entries are not recoverable from context, seed the backend with the known sample wines (Croatia and Italy, at least 3 per country) as a baseline and ensure stable storage is in place so data persists across canister upgrades.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "we also need to add the option for the yera in the wine add ox"
+          "put ck the wine i inserted"
         ]
       },
       "acceptanceCriteria": [
-        "The Wine record type in backend/main.mo includes a 'year' field (optional/nullable)",
-        "addWine accepts the year field",
-        "updateWine accepts and stores the year field",
-        "getAllWines returns the year field for each wine",
-        "Existing wines without a year default to null/empty without data loss"
+        "The wine list is not empty on first load after deployment.",
+        "Previously inserted wines (or a restored set of sample wines) are visible in the wine list table.",
+        "Wine data persists across canister upgrades using stable variables in backend/main.mo."
       ]
     },
     {
-      "id": "REQ-29",
-      "text": "Update the frontend wine query hooks in frontend/src/hooks/useQueries.ts to include the 'year' field when calling addWine and updateWine, and to read it from getAllWines results. Also display the Year value in the wine list table (frontend/src/components/WineTable.tsx) as part of the Wine Name column (e.g. appended in parentheses or as a small label), if present.",
+      "id": "REQ-39",
+      "text": "Remove the Naturavini logo from the PDF export in frontend/src/components/WineTable.tsx. The exported PDF must not include any logo image at the top or anywhere else in the document. The rest of the PDF content (wine catalogue grouped by country, all columns) must remain intact.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "we also need to add the option for the yera in the wine add ox"
+          "dont add any logo to the pdf not on the page"
         ]
       },
       "acceptanceCriteria": [
-        "useQueries.ts passes the year field to addWine and updateWine backend calls",
-        "The year value returned by getAllWines is read and surfaced in the UI",
-        "The Year is displayed in the wine list table alongside the Wine Name when present",
-        "Wines without a year display normally without errors"
-      ]
-    },
-    {
-      "id": "REQ-30",
-      "text": "Update the page header (frontend/src/components/PageHeader.tsx) to display the newly generated uploaded-style logo image (a wine glass illustration with grape cluster and 'NATURA VINI' wordmark). The logo image must be stored as frontend/public/assets/generated/naturavini-logo-v2.png and rendered in the header. If image generation fails or the image cannot be loaded, fall back gracefully to the existing logo or plain text.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "can you please add up this logo also in the page and pdf file",
-          "if not exlude it"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The page header displays the new logo image",
-        "The logo image is served from frontend/public/assets/generated/",
-        "If the logo fails to load, the header does not break — it falls back gracefully",
-        "The logo is visually prominent and consistent with the Naturavini brand theme"
-      ]
-    },
-    {
-      "id": "REQ-31",
-      "text": "Update the PDF export in frontend/src/components/WineTable.tsx to use the new logo image (frontend/public/assets/generated/naturavini-logo-v2.png) at the top of the exported PDF. If the logo image cannot be loaded at PDF generation time, skip rendering the logo in the PDF rather than throwing an error.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "can you please add up this logo also in the page and pdf file",
-          "if not exlude it"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The exported PDF displays the new Natura Vini logo at the top",
-        "If the logo image fails to load, the PDF is still generated without the logo (no crash)",
-        "The logo placement and sizing in the PDF is consistent with the brand's visual identity"
-      ]
-    },
-    {
-      "id": "REQ-32",
-      "text": "Update the PDF export in frontend/src/components/WineTable.tsx to include the 'Year' column in the exported wine catalogue table, placed after the Wine Name column. If a wine has no year value, the cell should display a dash (—).",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-4"
-        ],
-        "quotes": [
-          "we also need to add the option for the yera in the wine add ox"
-        ]
-      },
-      "acceptanceCriteria": [
-        "The exported PDF includes a 'Year' column after the Wine Name column",
-        "Wines with a year value display it in the Year column",
-        "Wines without a year value show a dash (—) in the Year column"
+        "Clicking 'Export to PDF' generates a PDF with no logo image anywhere in the document.",
+        "The PDF still contains the full wine catalogue grouped by country with all columns (Winery, Wine Name, Year, Wine Style, Grape Variety, Region, Price).",
+        "No errors are thrown during PDF generation related to logo loading."
       ]
     }
   ],
   "constraints": [
-    "If the new logo image cannot be loaded in the PDF, skip it gracefully — do not throw an error or break the export",
-    "The 'year' field must be optional/nullable in the backend to avoid breaking existing wine records",
-    "Do not modify any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui"
+    "Do not modify any files listed under frontend.immutablePaths.",
+    "All Motoko logic must remain in backend/main.mo as a single actor.",
+    "Do not remove or alter the logo from the page header (frontend/src/components/PageHeader.tsx) — only remove it from the PDF export."
   ],
   "nonGoals": [
-    "Changing the existing wine style options or other existing form fields",
-    "Redesigning the overall page layout or visual theme",
-    "Adding server-side PDF generation"
+    "Changing the visual design of the wine list table or page header.",
+    "Adding new form fields or wine attributes.",
+    "Modifying the PDF layout beyond removing the logo."
   ],
   "imageRequirements": {
-    "required": [
-      "Premium wine brand logo featuring a wine glass illustration with a grape cluster, bold 'NATURA VINI' wordmark in dark purple or deep burgundy, clean white background, elegant serif typography (naturavini-logo-v2.dim_400x200.png)"
-    ],
+    "required": [],
     "edits": []
   }
 }

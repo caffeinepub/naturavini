@@ -36,10 +36,10 @@ export default function PageHeader() {
         <div className="flex items-center gap-3">
           {!logoError ? (
             <img
-              src="/assets/generated/naturavini-logo-v2.dim_400x200.png"
-              alt="Natura Vini"
-              className="h-14 sm:h-16 w-auto object-contain"
-              style={{ filter: 'brightness(0) invert(1)' }}
+              src="/assets/generated/naturavini-logo-v4.dim_480x240.png"
+              alt="Natura Vini — wine glass with grape cluster and NATURA VINI wordmark"
+              className="h-14 sm:h-18 w-auto object-contain"
+              style={{ maxWidth: '220px' }}
               onError={() => setLogoError(true)}
             />
           ) : (

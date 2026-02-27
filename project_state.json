@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 19,
+  "projectStateVersion": 25,
   "summary": "Building a Naturavini wine price list app, starting with a simplified version: basic wine list table with country, winery, wine name, and price, plus add/edit/delete functionality. More features to be added incrementally.",
   "architectural_notes": [
     "Build incrementally: start with basic table and CRUD, then layer in language toggle, PDF export, and styling"
@@ -10,10 +10,10 @@
     "Add Wine modal background is still transparent — confirmed recurring issue after version 2",
     "Version 3 modal fix made things worse — a black screen was added but the modal background is still not solid/opaque",
     "Version 5: all added wines are lost (data not persisting) and Add Wine functionality is broken — wines cannot be added",
-    "PDF export is broken: same data/rendering issue as the modal, and the Naturavini logo is missing from the PDF output"
+    "PDF export is broken: same data/rendering issue as the modal, and the Naturavini logo is missing from the PDF output",
+    "Wine data inserted by the user was lost — needs to be restored/re-added"
   ],
-  "isFixRequest": false,
-  "imageRequirements": "## Required Images\n- Premium wine brand logo featuring a wine glass illustration with a grape cluster, bold 'NATURA VINI' wordmark in dark purple or deep burgundy, clean white background, elegant serif typography (naturavini-logo-v2.dim_400x200.png)",
+  "isFixRequest": true,
   "existing_features": [
     {
       "id": "feature-build-a-frontend-wine-list-table-that-displays-all-wines-grouped-by-country-with-columns-winery-wine-name-and-price-the-table-must-be-readable-and-well-structured",
@@ -214,6 +214,54 @@
         "REQ-32"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-update-the-page-header-frontend-src-components-pageheader-tsx-to-render-the-newly-uploaded-natura-vini-logo-image-stored-as-frontend-public-assets-generated-naturavini-logo-v3-png-this-logo-features-a-green-wine-glass-with-a-purple-grape-cluster-and-the-natura-vini-wordmark-in-dark-purple-on-a-white-background-if-the-image-fails-to-load-fall-back-gracefully-to-plain-text",
+      "title": "Update the page header (frontend/src/components/PageHeader.tsx) to render the newly uploaded Natura Vini logo image stored as frontend/public/assets/generated/naturavini-logo-v3.png. This logo features a green wine glass with a purple grape cluster and the 'NATURA VINI' wordmark in dark purple on a white background. If the image fails to load, fall back gracefully to plain text.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-pdf-export-in-frontend-src-components-winetable-tsx-to-use-the-newly-uploaded-logo-image-frontend-public-assets-generated-naturavini-logo-v3-png-at-the-top-of-the-exported-pdf-above-the-wine-catalogue-content-if-the-logo-image-cannot-be-loaded-at-pdf-generation-time-skip-rendering-the-logo-rather-than-throwing-an-error",
+      "title": "Update the PDF export in frontend/src/components/WineTable.tsx to use the newly uploaded logo image (frontend/public/assets/generated/naturavini-logo-v3.png) at the top of the exported PDF, above the wine catalogue content. If the logo image cannot be loaded at PDF generation time, skip rendering the logo rather than throwing an error.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-ensure-the-year-vintage-year-numeric-input-field-is-present-and-functional-in-the-add-edit-wine-modal-form-frontend-src-components-wineformmodal-tsx-the-field-must-be-optional-accept-a-4-digit-year-e-g-2023-be-placed-after-the-wine-name-field-and-before-the-wine-style-field-and-its-value-must-be-included-in-the-form-submission-payload-sent-to-the-backend",
+      "title": "Ensure the 'Year' (vintage year) numeric input field is present and functional in the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field must be optional, accept a 4-digit year (e.g. 2023), be placed after the Wine Name field and before the Wine Style field, and its value must be included in the form submission payload sent to the backend.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-page-header-frontend-src-components-pageheader-tsx-to-render-the-newly-uploaded-natura-vini-logo-image-stored-as-frontend-public-assets-generated-naturavini-logo-v4-png-this-logo-shows-a-wine-glass-with-a-grape-cluster-illustration-and-the-natura-vini-wordmark-in-dark-black-text-on-a-light-background-if-the-image-fails-to-load-fall-back-gracefully-to-plain-text",
+      "title": "Update the page header (frontend/src/components/PageHeader.tsx) to render the newly uploaded Natura Vini logo image stored as frontend/public/assets/generated/naturavini-logo-v4.png. This logo shows a wine glass with a grape cluster illustration and the 'NATURA VINI' wordmark in dark/black text on a light background. If the image fails to load, fall back gracefully to plain text.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-pdf-export-in-frontend-src-components-winetable-tsx-to-use-the-newly-uploaded-logo-image-frontend-public-assets-generated-naturavini-logo-v4-png-at-the-top-of-the-exported-pdf-above-the-wine-catalogue-content-if-the-logo-image-cannot-be-loaded-at-pdf-generation-time-skip-rendering-the-logo-rather-than-throwing-an-error",
+      "title": "Update the PDF export in frontend/src/components/WineTable.tsx to use the newly uploaded logo image (frontend/public/assets/generated/naturavini-logo-v4.png) at the top of the exported PDF, above the wine catalogue content. If the logo image cannot be loaded at PDF generation time, skip rendering the logo rather than throwing an error.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-naturavini-logo-from-the-pdf-export-in-frontend-src-components-winetable-tsx-the-exported-pdf-must-not-include-any-logo-image-at-the-top-or-anywhere-else-in-the-document-the-rest-of-the-pdf-content-wine-catalogue-grouped-by-country-all-columns-must-remain-intact",
+      "title": "Remove the Naturavini logo from the PDF export in frontend/src/components/WineTable.tsx. The exported PDF must not include any logo image at the top or anywhere else in the document. The rest of the PDF content (wine catalogue grouped by country, all columns) must remain intact.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -354,6 +402,20 @@
       "summary": "Add a 'year' optional field (nullable text or Nat) to the Wine data model in backend/main.mo. Update the addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be null/empty for existing wines.",
       "reqIds": [
         "REQ-28"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Remove the Naturavini logo from the PDF export — the exported PDF should not include any logo",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Restore the wine entries previously inserted by the user that were lost. Re-populate the backend with the wines that were added before the data loss, ensuring they appear in the wine list on load. If the exact wine entries are not recoverable from context, seed the backend with the known sample wines (Croatia and Italy, at least 3 per country) as a baseline and ensure stable storage is in place so data persists across canister upgrades.",
+      "reqIds": [
+        "REQ-38"
       ],
       "status": "pending"
     }

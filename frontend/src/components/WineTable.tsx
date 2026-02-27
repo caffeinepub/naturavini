@@ -66,25 +66,6 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
-// Load logo as base64 for embedding in PDF
-function loadImageAsBase64(url: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext('2d');
-      if (!ctx) { reject(new Error('Canvas context unavailable')); return; }
-      ctx.drawImage(img, 0, 0);
-      resolve(canvas.toDataURL('image/png'));
-    };
-    img.onerror = () => reject(new Error('Failed to load image'));
-    img.src = url;
-  });
-}
-
 async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
   // Load jsPDF and autotable from CDN
   await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
@@ -107,40 +88,6 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
   const contentWidth = pageWidth - marginLeft - marginRight;
 
   let currentY = 14;
-
-  // Try to embed the v2 logo first, fall back to v1, then text
-  let logoLoaded = false;
-  for (const logoPath of [
-    '/assets/generated/naturavini-logo-v2.dim_400x200.png',
-    '/assets/generated/naturavini-logo.dim_400x120.png',
-  ]) {
-    try {
-      const logoBase64 = await loadImageAsBase64(logoPath);
-      const isV2 = logoPath.includes('v2');
-      const naturalW = 400;
-      const naturalH = isV2 ? 200 : 120;
-      const logoMaxW = 60;
-      const logoMaxH = isV2 ? 30 : 18;
-      const ratio = Math.min(logoMaxW / naturalW, logoMaxH / naturalH);
-      const logoW = naturalW * ratio;
-      const logoH = naturalH * ratio;
-      doc.addImage(logoBase64, 'PNG', marginLeft, currentY, logoW, logoH);
-      currentY += logoH + 4;
-      logoLoaded = true;
-      break;
-    } catch {
-      // Try next logo
-    }
-  }
-
-  if (!logoLoaded) {
-    // Fallback: text logo
-    doc.setFontSize(22);
-    doc.setFont('helvetica', 'bold');
-    doc.setTextColor(oliveR, oliveG, oliveB);
-    doc.text('NATURA VINI', marginLeft, currentY + 8);
-    currentY += 14;
-  }
 
   // Subtitle
   doc.setFontSize(9);
@@ -441,155 +388,144 @@ export default function WineTable() {
         )}
       </div>
 
+      {/* Mutation error */}
+      {mutationError && (
+        <div className="flex items-center gap-3 text-destructive bg-destructive/10 px-4 py-3 rounded-md mb-2">
+          <AlertCircle className="h-4 w-4 flex-shrink-0" />
+          <p className="text-sm">{mutationError}</p>
+        </div>
+      )}
+
       {/* Empty state */}
       {grouped.length === 0 && (
-        <div className="text-center py-16 text-muted-foreground">
-          <Wine className="h-12 w-12 mx-auto mb-3 opacity-30" />
-          <p className="font-serif text-lg">No wines yet</p>
+        <div className="flex flex-col items-center justify-center py-20 text-muted-foreground gap-3">
+          <Wine className="h-12 w-12 opacity-30" />
+          <p className="text-base font-medium">No wines in the catalogue yet.</p>
           {isAdmin && (
-            <p className="text-sm mt-1">Click "Add Wine" to get started.</p>
+            <p className="text-sm">Click "Add Wine" to get started.</p>
           )}
         </div>
       )}
 
       {/* Country sections */}
       {grouped.map(([country, countryWines]) => (
-        <section key={country} className="overflow-hidden rounded-sm shadow-xs border border-border">
+        <div key={country} className="mb-6">
           {/* Country banner */}
-          <div className="country-banner flex items-center gap-2">
-            <Wine className="h-4 w-4 opacity-70" />
-            <span>{country}</span>
-            <span className="ml-auto text-primary-foreground/60 text-xs font-normal normal-case tracking-normal">
+          <div className="country-banner flex items-center justify-between px-4 py-2 mb-0">
+            <span className="font-serif font-bold text-sm tracking-widest uppercase text-primary-foreground">
+              {country}
+            </span>
+            <span className="text-primary-foreground/70 text-xs font-sans">
               {countryWines.length} {countryWines.length === 1 ? 'wine' : 'wines'}
             </span>
           </div>
 
-          {/* Table */}
-          <Table>
-            <TableHeader>
-              <TableRow className="bg-secondary/50 hover:bg-secondary/50 border-b border-border">
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[17%]">
-                  Winery
-                </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[17%]">
-                  Wine Name
-                </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[7%]">
-                  Year
-                </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[11%]">
-                  Style
-                </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[14%]">
-                  Grape
-                </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[12%]">
-                  Region
-                </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right w-[10%]">
-                  Price
-                </TableHead>
-                <TableHead className="w-[8%]" />
-                {isAdmin && (
-                  <TableHead className="w-[90px]" />
-                )}
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {countryWines.map((wine) => (
-                <TableRow
-                  key={wine.id}
-                  className={`wine-row bg-card ${wine.soldOut ? 'opacity-70' : ''}`}
-                >
-                  <TableCell className="font-medium text-foreground py-3.5 font-serif">
-                    {wine.winery}
-                  </TableCell>
-                  <TableCell className="font-medium text-foreground py-3.5 font-serif">
-                    {wine.wineName}
-                  </TableCell>
-                  <TableCell className="py-3.5 text-sm text-foreground/60 tabular-nums">
-                    {wine.year ?? <span className="text-muted-foreground/40">—</span>}
-                  </TableCell>
-                  <TableCell className="py-3.5">
-                    <span className="inline-flex items-center gap-1.5 text-sm text-foreground/80">
-                      <span className={`inline-block h-2.5 w-2.5 rounded-full flex-shrink-0 ${wineStyleDotColor(wine.wineStyle)}`} />
-                      {formatWineStyle(wine.wineStyle)}
-                    </span>
-                  </TableCell>
-                  <TableCell className="text-foreground/70 py-3.5 text-sm">
-                    {wine.grapeVariety ?? <span className="text-muted-foreground/50">—</span>}
-                  </TableCell>
-                  <TableCell className="text-foreground/70 py-3.5 text-sm">
-                    {wine.region ?? <span className="text-muted-foreground/50">—</span>}
-                  </TableCell>
-                  <TableCell className="text-right font-semibold text-accent py-3.5 tabular-nums">
-                    {wine.price}
-                  </TableCell>
-                  {/* Sold Out badge column */}
-                  <TableCell className="py-3.5">
-                    {wine.soldOut && (
-                      <span className="inline-flex items-center rounded-sm border border-destructive/40 bg-destructive/10 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-destructive leading-none whitespace-nowrap">
-                        Sold Out
-                      </span>
-                    )}
-                  </TableCell>
+          {/* Wine table */}
+          <div className="border border-border rounded-b-md overflow-hidden">
+            <Table>
+              <TableHeader>
+                <TableRow className="bg-muted/40 hover:bg-muted/40">
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[18%]">Winery</TableHead>
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[20%]">Wine Name</TableHead>
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[8%] text-center">Year</TableHead>
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[12%]">Style</TableHead>
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[16%] hidden md:table-cell">Grape Variety</TableHead>
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[14%] hidden sm:table-cell">Region</TableHead>
+                  <TableHead className="font-sans text-xs uppercase tracking-wider text-muted-foreground w-[10%] text-right">Price</TableHead>
                   {isAdmin && (
-                    <TableCell className="py-3.5">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
-                          onClick={() => { setMutationError(null); setEditWine(wine); }}
-                          title="Edit wine"
-                        >
-                          <Pencil className="h-3.5 w-3.5" />
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="icon"
-                          className="h-8 w-8 text-muted-foreground hover:text-destructive hover:bg-destructive/10"
-                          onClick={() => { setMutationError(null); setDeleteTarget(wine); }}
-                          title="Delete wine"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </Button>
-                      </div>
-                    </TableCell>
+                    <TableHead className="w-[8%]" />
                   )}
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </section>
+              </TableHeader>
+              <TableBody>
+                {countryWines.map((wine) => (
+                  <TableRow
+                    key={wine.id}
+                    className={`wine-row transition-colors ${wine.soldOut ? 'opacity-60' : ''}`}
+                  >
+                    <TableCell className="font-medium text-sm">{wine.winery}</TableCell>
+                    <TableCell className="text-sm">
+                      <span className={wine.soldOut ? 'line-through text-muted-foreground' : ''}>
+                        {wine.wineName}
+                      </span>
+                      {wine.soldOut && (
+                        <span className="ml-2 text-xs font-semibold text-destructive uppercase tracking-wide">
+                          Sold Out
+                        </span>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-sm text-center text-muted-foreground">
+                      {wine.year ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-sm">
+                      <span className="flex items-center gap-1.5">
+                        <span className={`inline-block w-2.5 h-2.5 rounded-full flex-shrink-0 ${wineStyleDotColor(wine.wineStyle)}`} />
+                        {formatWineStyle(wine.wineStyle)}
+                      </span>
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden md:table-cell">
+                      {wine.grapeVariety ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-sm text-muted-foreground hidden sm:table-cell">
+                      {wine.region ?? '—'}
+                    </TableCell>
+                    <TableCell className="text-sm font-semibold text-primary text-right">
+                      {wine.price}
+                    </TableCell>
+                    {isAdmin && (
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-1">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                            onClick={() => { setMutationError(null); setEditWine(wine); }}
+                          >
+                            <Pencil className="h-3.5 w-3.5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-7 w-7 text-muted-foreground hover:text-destructive"
+                            onClick={() => { setMutationError(null); setDeleteTarget(wine); }}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    )}
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       ))}
 
       {/* Add Wine Modal */}
       <WineFormModal
         open={addOpen}
-        onClose={() => { setAddOpen(false); setMutationError(null); }}
+        onClose={() => setAddOpen(false)}
         onSubmit={handleAdd}
         isLoading={addWine.isPending}
-        error={mutationError}
       />
 
       {/* Edit Wine Modal */}
       <WineFormModal
         open={!!editWine}
-        onClose={() => { setEditWine(null); setMutationError(null); }}
+        onClose={() => setEditWine(null)}
         onSubmit={handleEdit}
-        initialData={editWine}
         isLoading={updateWine.isPending}
-        error={mutationError}
+        initialData={editWine}
       />
 
       {/* Delete Confirmation */}
       <DeleteWineDialog
         open={!!deleteTarget}
-        wine={deleteTarget}
-        onClose={() => { setDeleteTarget(null); setMutationError(null); }}
+        onClose={() => setDeleteTarget(null)}
         onConfirm={handleDelete}
         isLoading={deleteWine.isPending}
+        wine={deleteTarget}
       />
     </div>
   );

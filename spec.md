@@ -1,14 +1,11 @@
 # Specification
 
 ## Summary
-**Goal:** Add a vintage Year field to the wine form and data model, display the Natura Vini logo in the page header and PDF export, and include the Year column in the PDF.
+**Goal:** Restore lost wine data in the backend and remove the logo from the PDF export.
 
 **Planned changes:**
-- Add an optional numeric "Year" field to the Add/Edit Wine modal form, positioned after Wine Name and before Wine Style
-- Add an optional/nullable `year` field to the Wine data model in the backend; update `addWine`, `updateWine`, and `getAllWines` accordingly
-- Update frontend query hooks to pass and read the `year` field; display the year alongside the wine name in the wine list table
-- Display the new Natura Vini logo image in the page header with graceful fallback if it fails to load
-- Add the Natura Vini logo to the top of the exported PDF, skipping it gracefully if it cannot be loaded
-- Add a "Year" column to the exported PDF table (after Wine Name), showing a dash (—) for wines without a year
+- Re-seed the backend with sample wines (Croatia and Italy, at least 3 per country) so the wine list is not empty on load.
+- Ensure wine data persists across canister upgrades using stable variables in `backend/main.mo`.
+- Remove the Naturavini logo from the PDF export in `WineTable.tsx`; the rest of the PDF content (wine catalogue grouped by country with all columns) remains intact.
 
-**User-visible outcome:** Users can add and edit a vintage year for each wine, see it displayed in the wine list and PDF export, and the page header and PDF now feature the Natura Vini logo.
+**User-visible outcome:** The wine list shows populated wine entries on first load, data survives upgrades, and exporting to PDF produces a logo-free document with the full wine catalogue.

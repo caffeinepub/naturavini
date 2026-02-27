@@ -6,9 +6,7 @@ import Principal "mo:core/Principal";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
-import Migration "migration";
 
-(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
@@ -66,10 +64,7 @@ actor {
 
   let wines = Map.empty<Text, Wine>();
 
-  public query ({ caller }) func getWines() : async [Wine] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users and admins can view wines");
-    };
+  public query func getWines() : async [Wine] {
     wines.values().toArray();
   };
 

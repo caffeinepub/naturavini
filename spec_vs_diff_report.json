@@ -1,36 +1,24 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T21:12:52.229Z",
-  "summary": "The diff implements all 6 requirements (REQ-27 through REQ-32). The Year field is added to the backend model, form modal, query hooks, table display, and PDF export. The logo is updated in the page header and PDF with graceful fallback handling. However, there is a minor discrepancy in REQ-30: the logo image file path referenced in code is 'naturavini-logo-v2.dim_400x200.png' (with dimension suffix) rather than 'naturavini-logo-v2.png' as specified. The WineTable.tsx diff is truncated so full verification of REQ-29 table display and REQ-31/REQ-32 PDF details cannot be confirmed from diff content alone.",
+  "generatedAt": "2026-02-27T22:11:47.062Z",
+  "summary": "The diff addresses both REQ-38 (restore/seed wine data with stable storage) and REQ-39 (remove logo from PDF export). REQ-39 appears fully implemented — the WineTable.tsx description confirms 'logo-free PDF export' and the exportToPDF function in the diff shows no logo loading code, starting directly with subtitle text. REQ-38 appears partially addressed with a setupSampleData() function seeding wines, but the diff is truncated so stable variable usage (required for persistence across canister upgrades) cannot be fully confirmed from the visible code.",
   "missing_requirements": [
     {
-      "id": "REQ-30",
-      "requirement": "The logo image must be stored as frontend/public/assets/generated/naturavini-logo-v2.png and rendered in the header.",
-      "reason": "The PageHeader.tsx references the image at '/assets/generated/naturavini-logo-v2.dim_400x200.png' (with a dimension suffix in the filename) rather than the specified 'naturavini-logo-v2.png'. No evidence that the file is stored at the exact required path.",
+      "id": "REQ-38",
+      "requirement": "Wine data persists across canister upgrades using stable variables in backend/main.mo.",
+      "reason": "The diff shows backend/main.mo was modified and a setupSampleData() function exists, but the truncated diff does not show stable variable declarations (e.g., 'stable var wines' or system preupgrade/postupgrade hooks). The Map used for wines appears to be a non-stable let binding, which would not survive canister upgrades.",
       "evidence": [
-        "frontend/src/components/PageHeader.tsx"
+        "backend/main.mo"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "A dedicated migration module (backend/migration.mo) was created to handle schema migration for existing wine records when adding the year field.",
-      "reason": "The build request only asked for the year field to default to null for existing wines without data loss. A separate migration module file was not requested — this is an implementation detail that goes beyond the stated requirements.",
-      "evidence": [
-        "backend/migration.mo"
-      ]
-    }
-  ],
-  "confidence": 0.78,
+  "hallucinated_features": [],
+  "confidence": 0.7,
   "changed_files": [
     "backend/main.mo",
-    "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/components/PageHeader.tsx",
-    "frontend/src/components/WineFormModal.tsx",
     "frontend/src/components/WineTable.tsx",
-    "frontend/src/hooks/useQueries.ts",
     "project_state.json"
   ]
 }

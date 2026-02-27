@@ -1,71 +1,25 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T21:12:52.233Z",
+  "generatedAt": "2026-02-27T22:11:47.065Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 5,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
-        "id": "REQ-27",
-        "summary": "Add a 'Year' (vintage year) numeric input field to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be optional, accept a 4-digit year (e.g. 2023), and be placed after the Wine Name field and before the Wine Style field. It must be included in the WineFormData interface and sent as part of the form submission payload.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WineFormModal.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WineFormModal.tsx"
-        ]
-      },
-      {
-        "id": "REQ-28",
-        "summary": "Add a 'year' optional field (nullable text or Nat) to the Wine data model in backend/main.mo. Update the addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be null/empty for existing wines.",
+        "id": "REQ-38",
+        "summary": "Restore the wine entries previously inserted by the user that were lost. Re-populate the backend with the wines that were added before the data loss, ensuring they appear in the wine list on load. If the exact wine entries are not recoverable from context, seed the backend with the known sample wines (Croatia and Italy, at least 3 per country) as a baseline and ensure stable storage is in place so data persists across canister upgrades.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
-        "id": "REQ-29",
-        "summary": "Update the frontend wine query hooks in frontend/src/hooks/useQueries.ts to include the 'year' field when calling addWine and updateWine, and to read it from getAllWines results. Also display the Year value in the wine list table (frontend/src/components/WineTable.tsx) as part of the Wine Name column (e.g. appended in parentheses or as a small label), if present.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/WineTable.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts",
-          "frontend/src/components/WineTable.tsx"
-        ]
-      },
-      {
-        "id": "REQ-30",
-        "summary": "Update the page header (frontend/src/components/PageHeader.tsx) to display the newly generated uploaded-style logo image (a wine glass illustration with grape cluster and 'NATURA VINI' wordmark). The logo image must be stored as frontend/public/assets/generated/naturavini-logo-v2.png and rendered in the header. If image generation fails or the image cannot be loaded, fall back gracefully to the existing logo or plain text.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/PageHeader.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/PageHeader.tsx"
-        ]
-      },
-      {
-        "id": "REQ-31",
-        "summary": "Update the PDF export in frontend/src/components/WineTable.tsx to use the new logo image (frontend/public/assets/generated/naturavini-logo-v2.png) at the top of the exported PDF. If the logo image cannot be loaded at PDF generation time, skip rendering the logo in the PDF rather than throwing an error.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/WineTable.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/WineTable.tsx"
-        ]
-      },
-      {
-        "id": "REQ-32",
-        "summary": "Update the PDF export in frontend/src/components/WineTable.tsx to include the 'Year' column in the exported wine catalogue table, placed after the Wine Name column. If a wine has no year value, the cell should display a dash (—).",
+        "id": "REQ-39",
+        "summary": "Remove the Naturavini logo from the PDF export in frontend/src/components/WineTable.tsx. The exported PDF must not include any logo image at the top or anywhere else in the document. The rest of the PDF content (wine catalogue grouped by country, all columns) must remain intact.",
         "status": "implemented",
         "plannedFiles": [
           "frontend/src/components/WineTable.tsx"
@@ -78,20 +32,11 @@
   },
   "changedFiles": [
     "backend/main.mo",
-    "backend/migration.mo",
     "build-request.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/public/assets/generated/naturavini-logo-v2.dim_400x200.png",
-    "frontend/src/backend.d.ts",
-    "frontend/src/backend.ts",
-    "frontend/src/components/PageHeader.tsx",
-    "frontend/src/components/WineFormModal.tsx",
     "frontend/src/components/WineTable.tsx",
-    "frontend/src/declarations/backend.did.d.ts",
-    "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useQueries.ts",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

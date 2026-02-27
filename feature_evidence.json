@@ -2,69 +2,8 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-a-year-vintage-year-numeric-input-field-to-the-add-edit-wine-modal-form-frontend-src-components-wineformmodal-tsx-the-field-should-be-optional-accept-a-4-digit-year-e-g-2023-and-be-placed-after-the-wine-name-field-and-before-the-wine-style-field-it-must-be-included-in-the-wineformdata-interface-and-sent-as-part-of-the-form-submission-payload",
-      "featureTitle": "Add a 'Year' (vintage year) numeric input field to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be optional, accept a 4-digit year (e.g. 2023), and be placed after the Wine Name field and before the Wine Style field. It must be included in the WineFormData interface and sent as part of the form submission payload.",
-      "files": [
-        "frontend/src/components/WineFormModal.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-27"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-frontend-wine-query-hooks-in-frontend-src-hooks-usequeries-ts-to-include-the-year-field-when-calling-addwine-and-updatewine-and-to-read-it-from-getallwines-results-also-display-the-year-value-in-the-wine-list-table-frontend-src-components-winetable-tsx-as-part-of-the-wine-name-column-e-g-appended-in-parentheses-or-as-a-small-label-if-present",
-      "featureTitle": "Update the frontend wine query hooks in frontend/src/hooks/useQueries.ts to include the 'year' field when calling addWine and updateWine, and to read it from getAllWines results. Also display the Year value in the wine list table (frontend/src/components/WineTable.tsx) as part of the Wine Name column (e.g. appended in parentheses or as a small label), if present.",
-      "files": [
-        "frontend/src/components/WineTable.tsx",
-        "frontend/src/hooks/useQueries.ts"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-29"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-page-header-frontend-src-components-pageheader-tsx-to-display-the-newly-generated-uploaded-style-logo-image-a-wine-glass-illustration-with-grape-cluster-and-natura-vini-wordmark-the-logo-image-must-be-stored-as-frontend-public-assets-generated-naturavini-logo-v2-png-and-rendered-in-the-header-if-image-generation-fails-or-the-image-cannot-be-loaded-fall-back-gracefully-to-the-existing-logo-or-plain-text",
-      "featureTitle": "Update the page header (frontend/src/components/PageHeader.tsx) to display the newly generated uploaded-style logo image (a wine glass illustration with grape cluster and 'NATURA VINI' wordmark). The logo image must be stored as frontend/public/assets/generated/naturavini-logo-v2.png and rendered in the header. If image generation fails or the image cannot be loaded, fall back gracefully to the existing logo or plain text.",
-      "files": [
-        "frontend/src/components/PageHeader.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-30"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-pdf-export-in-frontend-src-components-winetable-tsx-to-use-the-new-logo-image-frontend-public-assets-generated-naturavini-logo-v2-png-at-the-top-of-the-exported-pdf-if-the-logo-image-cannot-be-loaded-at-pdf-generation-time-skip-rendering-the-logo-in-the-pdf-rather-than-throwing-an-error",
-      "featureTitle": "Update the PDF export in frontend/src/components/WineTable.tsx to use the new logo image (frontend/public/assets/generated/naturavini-logo-v2.png) at the top of the exported PDF. If the logo image cannot be loaded at PDF generation time, skip rendering the logo in the PDF rather than throwing an error.",
+      "featureId": "feature-remove-the-naturavini-logo-from-the-pdf-export-in-frontend-src-components-winetable-tsx-the-exported-pdf-must-not-include-any-logo-image-at-the-top-or-anywhere-else-in-the-document-the-rest-of-the-pdf-content-wine-catalogue-grouped-by-country-all-columns-must-remain-intact",
+      "featureTitle": "Remove the Naturavini logo from the PDF export in frontend/src/components/WineTable.tsx. The exported PDF must not include any logo image at the top or anywhere else in the document. The rest of the PDF content (wine catalogue grouped by country, all columns) must remain intact.",
       "files": [
         "frontend/src/components/WineTable.tsx"
       ],
@@ -78,27 +17,7 @@
         "blob-storage@4.0.0"
       ],
       "testIds": [
-        "REQ-31"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-update-the-pdf-export-in-frontend-src-components-winetable-tsx-to-include-the-year-column-in-the-exported-wine-catalogue-table-placed-after-the-wine-name-column-if-a-wine-has-no-year-value-the-cell-should-display-a-dash",
-      "featureTitle": "Update the PDF export in frontend/src/components/WineTable.tsx to include the 'Year' column in the exported wine catalogue table, placed after the Wine Name column. If a wine has no year value, the cell should display a dash (—).",
-      "files": [
-        "frontend/src/components/WineTable.tsx"
-      ],
-      "components": [
-        "authorization@4.0.0",
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0"
-      ],
-      "testIds": [
-        "REQ-32"
+        "REQ-39"
       ],
       "confidence": "high"
     }
