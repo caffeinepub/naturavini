@@ -1,0 +1,75 @@
+import React from 'react';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useQueryClient } from '@tanstack/react-query';
+import { LogIn, LogOut, Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+
+export default function PageHeader() {
+  const { login, clear, loginStatus, identity } = useInternetIdentity();
+  const queryClient = useQueryClient();
+
+  const isAuthenticated = !!identity;
+  const isLoggingIn = loginStatus === 'logging-in';
+
+  const handleAuth = async () => {
+    if (isAuthenticated) {
+      await clear();
+      queryClient.clear();
+    } else {
+      try {
+        await login();
+      } catch (error: unknown) {
+        const err = error as Error;
+        if (err?.message === 'User is already authenticated') {
+          await clear();
+          setTimeout(() => login(), 300);
+        }
+      }
+    }
+  };
+
+  return (
+    <header className="bg-primary shadow-catalogue">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
+        {/* Logo */}
+        <div className="flex items-center gap-3">
+          <img
+            src="/assets/generated/naturavini-logo.dim_400x160.png"
+            alt="Natura Vini"
+            className="h-14 sm:h-16 w-auto object-contain"
+            style={{ filter: 'brightness(0) invert(1)' }}
+          />
+        </div>
+
+        {/* Auth button */}
+        <Button
+          onClick={handleAuth}
+          disabled={isLoggingIn}
+          variant="outline"
+          size="sm"
+          className="border-primary-foreground/40 text-primary-foreground bg-transparent hover:bg-primary-foreground/10 hover:text-primary-foreground gap-2"
+        >
+          {isLoggingIn ? (
+            <Loader2 className="h-4 w-4 animate-spin" />
+          ) : isAuthenticated ? (
+            <LogOut className="h-4 w-4" />
+          ) : (
+            <LogIn className="h-4 w-4" />
+          )}
+          <span className="hidden sm:inline">
+            {isLoggingIn ? 'Logging in…' : isAuthenticated ? 'Log out' : 'Admin Login'}
+          </span>
+        </Button>
+      </div>
+
+      {/* Subtitle bar */}
+      <div className="bg-primary/80 border-t border-primary-foreground/10">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-2">
+          <p className="text-primary-foreground/70 text-xs tracking-widest uppercase font-sans">
+            Natural Wine Price List
+          </p>
+        </div>
+      </div>
+    </header>
+  );
+}

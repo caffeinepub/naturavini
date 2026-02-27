@@ -1,0 +1,21 @@
+{
+  "backend/main.mo": "Main Motoko actor implementing a wine catalogue backend with RBAC authorization, user profile management, and full CRUD operations for wines (add, update, delete, get) with role-based access control.",
+  "feature_evidence.json": "Feature evidence report listing two high-confidence features targeting PDF export bugs in WineTable.tsx: fixing duplicate country groupings and adding the Naturavini logo to exported PDFs.",
+  "frontend-file-summaries.txt": "JSON document containing one-sentence summaries for each frontend source file, describing their purpose and notable fixes/changes in the Naturavini wine app.",
+  "frontend/index.css": "Tailwind base CSS file defining shadcn/ui OKLCH CSS variable tokens for light and dark themes including colors, radius, sidebar, and chart variables.",
+  "frontend/index.html": "HTML entry point for the Naturavini Wine Price List app, mounting the React app at the root div and loading the main TypeScript module.",
+  "frontend/src/App.tsx": "Root React component composing PageHeader, WineList page, a footer with dynamic year and caffeine.ai attribution, and the Sonner toast provider.",
+  "frontend/src/components/DeleteWineDialog.tsx": "AlertDialog confirmation component for deleting a wine entry, displaying the wine name and winery with confirm/cancel actions and a loading spinner state.",
+  "frontend/src/components/PageHeader.tsx": "Olive green page header displaying the Naturavini logo image with an admin login/logout button using Internet Identity authentication.",
+  "frontend/src/components/WineFormModal.tsx": "Dialog modal for adding or editing a wine entry with form fields for country, region, winery, wine name, grape variety, style, and price, including validation and loading state.",
+  "frontend/src/components/WineTable.tsx": "React component that displays a sortable, grouped wine list table with add/edit/delete actions and PDF export functionality using dynamically loaded jsPDF.",
+  "frontend/src/hooks/useActor.ts": "Custom hook that creates and caches an ICP backend actor using React Query, supporting both anonymous and authenticated (Internet Identity) access with admin token initialization.",
+  "frontend/src/hooks/useInternetIdentity.ts": "Provides an InternetIdentityProvider and useInternetIdentity hook for managing ICP Internet Identity authentication state, including login, logout, and identity persistence via AuthClient.",
+  "frontend/src/hooks/useQueries.ts": "Defines React Query hooks for CRUD operations (fetch, add, update, delete) on wines via the ICP backend actor, with toast notifications on success or error.",
+  "frontend/src/index.css": "Global CSS file that imports Google Fonts, configures Tailwind CSS, and defines light/dark theme CSS custom properties using an olive-green and cream color palette.",
+  "frontend/src/main.tsx": "Application entry point that renders the React app wrapped with QueryClientProvider and InternetIdentityProvider.",
+  "frontend/src/pages/WineList.tsx": "Page component that renders the wine price list with a header, optional admin mode indicator, and the WineTable component.",
+  "frontend/src/utils/urlParams.ts": "Utility functions for reading, persisting, and clearing URL parameters from both query strings and hash-based routing, with sessionStorage fallback support.",
+  "frontend/tailwind.config.js": "Tailwind CSS configuration for the Naturavini frontend, defining custom colors (olive, tangerine, semantic tokens via oklch CSS variables), fonts (Playfair Display, Inter), border radii, shadows, and animation keyframes. Includes plugins for typography, container queries, and animate.",
+  "project_state.json": "Tracks the current state of the Naturavini wine price list app project at version 15, listing existing features, known issues (modal transparency, data persistence, PDF export), and architectural notes favoring incremental builds."
+}

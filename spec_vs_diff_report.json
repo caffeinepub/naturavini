@@ -1,0 +1,14 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T20:50:26.131Z",
+  "summary": "The diff modifies frontend/src/components/WineTable.tsx to address both REQ-21 (correct country grouping in PDF export) and REQ-22 (Naturavini logo in PDF). The file summary confirms: 'country-grouped sections (using normalized keys to prevent duplicate country headers)' and 'PDF export with logo'. The loadImageAsBase64 function and logo embedding code are visible in the diff. The exportToPDF function receives pre-grouped data as [string, WineType[]][] which supports correct grouping. Both requirements appear to be implemented.",
+  "missing_requirements": [],
+  "hallucinated_features": [],
+  "confidence": 0.88,
+  "changed_files": [
+    "frontend-file-summaries.txt",
+    "frontend/src/components/WineTable.tsx",
+    "project_state.json"
+  ]
+}

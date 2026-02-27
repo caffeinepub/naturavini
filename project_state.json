@@ -1,0 +1,272 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 15,
+  "summary": "Building a Naturavini wine price list app, starting with a simplified version: basic wine list table with country, winery, wine name, and price, plus add/edit/delete functionality. More features to be added incrementally.",
+  "architectural_notes": [
+    "Build incrementally: start with basic table and CRUD, then layer in language toggle, PDF export, and styling"
+  ],
+  "known_issues": [
+    "Previous build attempts were too complex and hit processing limits — simplified approach adopted",
+    "Add Wine modal background is still transparent — confirmed recurring issue after version 2",
+    "Version 3 modal fix made things worse — a black screen was added but the modal background is still not solid/opaque",
+    "Version 5: all added wines are lost (data not persisting) and Add Wine functionality is broken — wines cannot be added",
+    "PDF export is broken: same data/rendering issue as the modal, and the Naturavini logo is missing from the PDF output"
+  ],
+  "isFixRequest": true,
+  "existing_features": [
+    {
+      "id": "feature-build-a-frontend-wine-list-table-that-displays-all-wines-grouped-by-country-with-columns-winery-wine-name-and-price-the-table-must-be-readable-and-well-structured",
+      "title": "Build a frontend wine list table that displays all wines grouped by country, with columns: Winery, Wine Name, and Price. The table must be readable and well-structured.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-add-edit-and-delete-functionality-for-wines-in-the-frontend-use-a-modal-or-inline-form-for-adding-and-editing-a-wine-fields-country-winery-wine-name-price-deleting-should-prompt-a-confirmation-before-removing",
+      "title": "Implement Add, Edit, and Delete functionality for wines in the frontend. Use a modal or inline form for adding and editing a wine (fields: country, winery, wine name, price). Deleting should prompt a confirmation before removing.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-visual-theme-inspired-by-the-naturavini-brand-olive-green-section-headers-banners-tangerine-orange-accents-for-buttons-and-highlights-clean-serif-or-elegant-sans-serif-typography-and-a-light-neutral-background-the-overall-feel-should-be-premium-and-wine-catalogue-like",
+      "title": "Apply a cohesive visual theme inspired by the Naturavini brand: olive green section headers/banners, tangerine orange accents for buttons and highlights, clean serif or elegant sans-serif typography, and a light neutral background. The overall feel should be premium and wine-catalogue-like.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-display-the-naturavini-logo-generated-image-prominently-in-the-page-header",
+      "title": "Display the Naturavini logo (generated image) prominently in the page header.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-grape-variety-text-input-field-to-the-add-edit-wine-modal-form-the-field-should-be-optional-and-placed-between-the-wine-name-and-price-fields",
+      "title": "Add a 'Grape Variety' text input field to the Add/Edit Wine modal form. The field should be optional and placed between the wine name and price fields.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-add-edit-wine-modal-so-its-background-is-fully-opaque-the-modal-dialog-panel-must-have-a-solid-white-or-light-neutral-background-so-the-page-content-behind-it-is-not-visible-through-the-modal",
+      "title": "Fix the Add/Edit Wine modal so its background is fully opaque. The modal dialog panel must have a solid white (or light neutral) background so the page content behind it is not visible through the modal.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-wine-style-dropdown-select-field-to-the-add-edit-wine-modal-form-options-must-include-red-white-ros-sparkling-orange-the-field-should-be-placed-after-the-wine-name-field",
+      "title": "Add a 'Wine Style' dropdown/select field to the Add/Edit Wine modal form. Options must include: Red, White, Rosé, Sparkling, Orange. The field should be placed after the wine name field.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-region-text-input-field-to-the-add-edit-wine-modal-form-the-field-should-be-placed-after-the-country-field",
+      "title": "Add a 'Region' text input field to the Add/Edit Wine modal form. The field should be placed after the country field.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-p-t-nat-as-an-option-to-the-wine-style-dropdown-select-field-in-the-add-edit-wine-modal-form-frontend-src-components-wineformmodal-tsx-the-updated-options-must-be-red-white-ros-sparkling-orange-p-t-nat",
+      "title": "Add 'Pét-Nat' as an option to the Wine Style dropdown/select field in the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The updated options must be: Red, White, Rosé, Sparkling, Orange, Pét-Nat.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-add-edit-wine-modal-overlay-so-it-is-fully-opaque-the-modal-backdrop-overlay-must-be-a-solid-non-transparent-color-so-the-page-content-behind-the-modal-is-not-visible-through-it-ensure-both-the-overlay-and-the-dialog-panel-have-solid-opaque-backgrounds",
+      "title": "Fix the Add/Edit Wine modal overlay so it is fully opaque. The modal backdrop/overlay must be a solid, non-transparent color so the page content behind the modal is not visible through it. Ensure both the overlay and the dialog panel have solid, opaque backgrounds.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-wine-list-table-frontend-src-components-winetable-tsx-apply-the-same-font-styling-to-the-wine-name-column-as-is-used-for-the-winery-column-so-both-display-in-the-same-typeface-weight-and-size",
+      "title": "In the wine list table (frontend/src/components/WineTable.tsx), apply the same font styling to the Wine Name column as is used for the Winery column, so both display in the same typeface, weight, and size.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-add-edit-wine-modal-in-frontend-src-components-wineformmodal-tsx-by-removing-any-black-overlay-or-backdrop-that-obscures-the-page-and-replacing-it-with-a-clean-fully-opaque-solid-white-or-light-neutral-background-on-the-dialog-panel-itself-the-dialogoverlay-must-not-render-a-dark-or-black-screen-the-modal-should-appear-as-a-standard-dialog-floating-above-the-page-with-a-solid-opaque-panel-background-no-transparency-no-black-screen-no-see-through-effect",
+      "title": "Fix the Add/Edit Wine modal in frontend/src/components/WineFormModal.tsx by removing any black overlay or backdrop that obscures the page, and replacing it with a clean, fully opaque solid white or light neutral background on the dialog panel itself. The DialogOverlay must not render a dark or black screen. The modal should appear as a standard dialog floating above the page with a solid, opaque panel background — no transparency, no black screen, no see-through effect.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-export-to-pdf-button-to-the-wine-list-page-frontend-src-pages-winelist-tsx-or-frontend-src-components-winetable-tsx-that-generates-and-downloads-a-formatted-pdf-of-the-complete-wine-catalogue-grouped-by-country-with-columns-for-winery-wine-name-wine-style-grape-variety-region-and-price-the-pdf-must-include-the-naturavini-logo-at-the-top-and-reflect-the-brand-s-visual-identity-olive-green-headings-clean-typography-use-a-client-side-pdf-library-e-g-jspdf-with-autotable-no-backend-involvement-required",
+      "title": "Add a 'Export to PDF' button to the wine list page (frontend/src/pages/WineList.tsx or frontend/src/components/WineTable.tsx) that generates and downloads a formatted PDF of the complete wine catalogue, grouped by country, with columns for Winery, Wine Name, Wine Style, Grape Variety, Region, and Price. The PDF must include the Naturavini logo at the top and reflect the brand's visual identity (olive green headings, clean typography). Use a client-side PDF library (e.g. jsPDF with autoTable) — no backend involvement required.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-naturavini-logo-image-used-in-the-page-header-frontend-src-components-pageheader-tsx-to-a-regenerated-version-that-closely-matches-the-original-natura-vini-pricelist-logo-a-refined-premium-wine-brand-mark-with-the-natura-vini-wordmark-and-any-accompanying-graphical-elements-e-g-leaf-vine-or-botanical-motif-the-logo-image-must-be-stored-in-frontend-public-assets-generated-and-rendered-in-the-header-as-before",
+      "title": "Update the Naturavini logo image used in the page header (frontend/src/components/PageHeader.tsx) to a regenerated version that closely matches the original Natura Vini pricelist logo — a refined, premium wine brand mark with the 'Natura Vini' wordmark and any accompanying graphical elements (e.g. leaf, vine, or botanical motif). The logo image must be stored in frontend/public/assets/generated/ and rendered in the header as before.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-add-wine-functionality-so-that-calling-addwine-from-the-frontend-successfully-creates-and-stores-a-new-wine-entry-in-the-backend-diagnose-and-resolve-any-mismatch-between-the-frontend-s-actor-call-in-frontend-src-hooks-usequeries-ts-and-the-backend-s-addwine-function-signature-in-backend-main-mo-the-add-wine-form-submission-must-result-in-the-new-wine-appearing-in-the-wine-list",
+      "title": "Fix the Add Wine functionality so that calling addWine from the frontend successfully creates and stores a new wine entry in the backend. Diagnose and resolve any mismatch between the frontend's actor call (in frontend/src/hooks/useQueries.ts) and the backend's addWine function signature in backend/main.mo. The Add Wine form submission must result in the new wine appearing in the wine list.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-pdf-export-in-frontend-src-components-winetable-tsx-so-that-wines-are-correctly-grouped-by-country-each-country-appears-only-once-with-all-its-wines-listed-under-it-the-current-bug-causes-wines-from-the-same-country-to-appear-in-separate-repeated-sections-e-g-italy-appears-twice-each-with-one-wine-instead-of-being-merged-into-one-group",
+      "title": "Fix the PDF export in frontend/src/components/WineTable.tsx so that wines are correctly grouped by country (each country appears only once, with all its wines listed under it). The current bug causes wines from the same country to appear in separate repeated sections (e.g. Italy appears twice, each with one wine instead of being merged into one group).",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-fix-the-pdf-export-in-frontend-src-components-winetable-tsx-so-that-the-naturavini-logo-image-stored-at-frontend-public-assets-generated-naturavini-logo-png-is-rendered-at-the-top-of-the-exported-pdf-above-the-wine-catalogue-content-reflecting-the-brand-s-visual-identity",
+      "title": "Fix the PDF export in frontend/src/components/WineTable.tsx so that the Naturavini logo image (stored at frontend/public/assets/generated/naturavini-logo.png) is rendered at the top of the exported PDF, above the wine catalogue content, reflecting the brand's visual identity.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Basic wine list table with country, winery, wine name, and price fields",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "Add, edit, and delete wines functionality",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "PDF export for sending to clients",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Wine type icons and fancy styling (olive green banners, tangerine orange accents, Naturavini logo)",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Create a backend data model and CRUD API for wines. Each wine record must have: id, country, winery, wineName, price (text), and createdAt. Expose functions: addWine, updateWine, deleteWine, and getAllWines.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Pre-load the app with a set of sample wines from Croatia and Italy (at least 3 per country) so the list is not empty on first load.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Add grape variety field to the Add Wine form/modal",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Fix Add Wine modal background — make it opaque/solid so the page background doesn't show through confusingly",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "Add wine style field (e.g. Red, White, Rosé, Sparkling, Orange) to the Add Wine form",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Add region field to the Add Wine form",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Add 'Pét-Nat' as an option to the Wine Style dropdown",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-15",
+      "summary": "Fix Add/Edit Wine modal overlay — modal background is still transparent/see-through, needs fully opaque solid background",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-16",
+      "summary": "Match wine name font to winery font on the wine list page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Generate and display the Naturavini logo image prominently in the page header (frontend/src/components/PageHeader.tsx), rendering it from frontend/public/assets/generated/.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Fix the backend so that wine data persists across canister upgrades. The stable storage for wines in backend/main.mo must use stable variables (or a stable data structure) so that all wines added by users are retained after redeployment. Verify that getAllWines returns previously added wines after an upgrade.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Update the Naturavini logo image in the page header (frontend/src/components/PageHeader.tsx) to use the uploaded Natura Vini logo: a wine glass illustration with grape cluster and the 'NATURA VINI' wordmark in dark purple, on a white background. Store the generated image as frontend/public/assets/generated/naturavini-logo.png and render it in the header.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-21",
+      "summary": "Fix PDF export: same issue as the modal (likely a rendering/data bug), and the PDF is missing the Naturavini logo — logo must appear at the top of the exported PDF",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Naturavini Wine Price List",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

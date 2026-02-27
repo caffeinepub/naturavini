@@ -1,0 +1,39 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Fix PDF export: correct grouping/data rendering and add Naturavini logo",
+  "requirements": [
+    {
+      "id": "REQ-21",
+      "summary": "Fix PDF export wine grouping so each country appears exactly once with all its wines listed together under it",
+      "acceptanceCriteria": [
+        "Exported PDF groups all wines by country, with each country name appearing exactly once as a section header.",
+        "All wines belonging to the same country are listed together under their country section in the PDF.",
+        "The grouping logic in the PDF export matches the grouping logic used in the WineTable display on screen."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WineTable.tsx",
+          "operation": "modify",
+          "description": "Fix the PDF export function's wine grouping logic to ensure wines are correctly grouped by country. Currently, wines from the same country are appearing in separate repeated sections (e.g., Italy appears twice). Modify the data preparation logic before calling autoTable to properly consolidate all wines under their respective country headers, ensuring each country name appears exactly once as a section header with all its wines listed beneath it. The fix should align the PDF grouping logic with the on-screen table grouping behavior."
+        }
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "summary": "Add Naturavini logo to the top of exported PDF above wine catalogue content",
+      "acceptanceCriteria": [
+        "The exported PDF includes the Naturavini logo image at the top of the first page.",
+        "The logo is loaded from frontend/public/assets/generated/naturavini-logo.png and embedded correctly in the PDF output.",
+        "The logo appears above the wine catalogue table content and is appropriately sized."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/WineTable.tsx",
+          "operation": "modify",
+          "description": "Modify the PDF export function to load and embed the Naturavini logo image from frontend/public/assets/generated/naturavini-logo.dim_400x120.png at the top of the PDF document, above the wine catalogue table content. Use jsPDF's addImage method to embed the logo with appropriate sizing and positioning. Ensure the logo is loaded as a data URL or base64 string for embedding in the client-side PDF generation process."
+        }
+      ]
+    }
+  ]
+}

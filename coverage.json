@@ -1,0 +1,48 @@
+{
+  "kind": "coverage_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-27T20:50:26.136Z",
+  "sources": {
+    "buildRequest": true,
+    "implementationPlan": true
+  },
+  "requirements": {
+    "total": 2,
+    "implemented": 2,
+    "items": [
+      {
+        "id": "REQ-21",
+        "summary": "Fix the PDF export in frontend/src/components/WineTable.tsx so that wines are correctly grouped by country (each country appears only once, with all its wines listed under it). The current bug causes wines from the same country to appear in separate repeated sections (e.g. Italy appears twice, each with one wine instead of being merged into one group).",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WineTable.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WineTable.tsx"
+        ]
+      },
+      {
+        "id": "REQ-22",
+        "summary": "Fix the PDF export in frontend/src/components/WineTable.tsx so that the Naturavini logo image (stored at frontend/public/assets/generated/naturavini-logo.png) is rendered at the top of the exported PDF, above the wine catalogue content, reflecting the brand's visual identity.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/WineTable.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/WineTable.tsx"
+        ]
+      }
+    ]
+  },
+  "changedFiles": [
+    "build-request.json",
+    "feature_evidence.json",
+    "frontend-file-summaries.txt",
+    "frontend-implementation-plan.json",
+    "frontend/src/components/WineTable.tsx",
+    "project_state.json",
+    "scratch/component-selection.json",
+    "spec.md",
+    "spec_vs_diff_report.json"
+  ]
+}

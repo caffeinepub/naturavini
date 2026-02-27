@@ -1,0 +1,58 @@
+{
+  "kind": "build_request",
+  "title": "Fix PDF export: correct grouping/data rendering and add Naturavini logo",
+  "projectName": "Naturavini Wine Price List",
+  "priority": "high",
+  "requirements": [
+    {
+      "id": "REQ-21",
+      "text": "Fix the PDF export in frontend/src/components/WineTable.tsx so that wines are correctly grouped by country (each country appears only once, with all its wines listed under it). The current bug causes wines from the same country to appear in separate repeated sections (e.g. Italy appears twice, each with one wine instead of being merged into one group).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "now this happened same in the pdf file"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Exported PDF groups all wines by country, with each country name appearing exactly once as a section header.",
+        "All wines belonging to the same country are listed together under their country section in the PDF.",
+        "The grouping logic in the PDF export matches the grouping logic used in the WineTable display on screen."
+      ]
+    },
+    {
+      "id": "REQ-22",
+      "text": "Fix the PDF export in frontend/src/components/WineTable.tsx so that the Naturavini logo image (stored at frontend/public/assets/generated/naturavini-logo.png) is rendered at the top of the exported PDF, above the wine catalogue content, reflecting the brand's visual identity.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-1"
+        ],
+        "quotes": [
+          "the pdf doesnt have the logo"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The exported PDF includes the Naturavini logo image at the top of the first page.",
+        "The logo is loaded from frontend/public/assets/generated/naturavini-logo.png and embedded correctly in the PDF output.",
+        "The logo appears above the wine catalogue table content and is appropriately sized."
+      ]
+    }
+  ],
+  "constraints": [
+    "PDF generation must remain fully client-side using jsPDF with autoTable — no backend involvement.",
+    "Do not modify any files listed in frontend.immutablePaths.",
+    "The logo image file at frontend/public/assets/generated/naturavini-logo.png must be used as-is."
+  ],
+  "nonGoals": [
+    "Changing the PDF column structure or visual style beyond fixing grouping and adding the logo.",
+    "Re-implementing the PDF library or switching to a different PDF generation approach.",
+    "Fixing any issues unrelated to PDF grouping and logo display."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}
