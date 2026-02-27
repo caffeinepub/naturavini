@@ -12,7 +12,6 @@ export function useGetAllWines() {
     queryKey: ['wines'],
     queryFn: async () => {
       if (!actor) return [];
-      // Backend method is getWines(), not getAllWines()
       return actor.getWines();
     },
     enabled: !!actor && !actorFetching,
@@ -35,6 +34,7 @@ export function useAddWine() {
       wineStyle: WineStyle;
       price: string;
       soldOut: boolean;
+      year: string | null;
     }) => {
       if (!actor) throw new Error('Actor not available');
       await actor.addWine(
@@ -47,6 +47,7 @@ export function useAddWine() {
         wine.wineStyle,
         wine.price,
         wine.soldOut,
+        wine.year,
       );
     },
     onSuccess: () => {
@@ -76,6 +77,7 @@ export function useUpdateWine() {
       wineStyle: WineStyle;
       price: string;
       soldOut: boolean;
+      year: string | null;
     }) => {
       if (!actor) throw new Error('Actor not available');
       await actor.updateWine(
@@ -88,6 +90,7 @@ export function useUpdateWine() {
         wine.wineStyle,
         wine.price,
         wine.soldOut,
+        wine.year,
       );
     },
     onSuccess: () => {

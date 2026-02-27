@@ -108,18 +108,32 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
 
   let currentY = 14;
 
-  // Try to embed logo
-  try {
-    const logoBase64 = await loadImageAsBase64('/assets/generated/naturavini-logo.dim_400x120.png');
-    const logoMaxH = 18;
-    const logoMaxW = 60;
-    const naturalW = 400, naturalH = 120;
-    const ratio = Math.min(logoMaxW / naturalW, logoMaxH / naturalH);
-    const logoW = naturalW * ratio;
-    const logoH = naturalH * ratio;
-    doc.addImage(logoBase64, 'PNG', marginLeft, currentY, logoW, logoH);
-    currentY += logoH + 4;
-  } catch {
+  // Try to embed the v2 logo first, fall back to v1, then text
+  let logoLoaded = false;
+  for (const logoPath of [
+    '/assets/generated/naturavini-logo-v2.dim_400x200.png',
+    '/assets/generated/naturavini-logo.dim_400x120.png',
+  ]) {
+    try {
+      const logoBase64 = await loadImageAsBase64(logoPath);
+      const isV2 = logoPath.includes('v2');
+      const naturalW = 400;
+      const naturalH = isV2 ? 200 : 120;
+      const logoMaxW = 60;
+      const logoMaxH = isV2 ? 30 : 18;
+      const ratio = Math.min(logoMaxW / naturalW, logoMaxH / naturalH);
+      const logoW = naturalW * ratio;
+      const logoH = naturalH * ratio;
+      doc.addImage(logoBase64, 'PNG', marginLeft, currentY, logoW, logoH);
+      currentY += logoH + 4;
+      logoLoaded = true;
+      break;
+    } catch {
+      // Try next logo
+    }
+  }
+
+  if (!logoLoaded) {
     // Fallback: text logo
     doc.setFontSize(22);
     doc.setFont('helvetica', 'bold');
@@ -162,10 +176,11 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
     doc.text(wineCount, pageWidth - marginRight - 3, currentY + 4.8, { align: 'right' });
     currentY += 7;
 
-    // Table rows — wine name gets "SOLD OUT" appended if applicable
+    // Table rows: columns = Winery, Wine Name, Year, Style, Grape Variety, Region, Price, (Sold Out)
     const tableBody = countryWines.map((wine) => [
       wine.winery,
       wine.wineName,
+      wine.year ?? '—',
       formatWineStyle(wine.wineStyle),
       wine.grapeVariety ?? '—',
       wine.region ?? '—',
@@ -176,12 +191,12 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (doc as any).autoTable({
       startY: currentY,
-      head: [['Winery', 'Wine Name', 'Style', 'Grape Variety', 'Region', 'Price', '']],
+      head: [['Winery', 'Wine Name', 'Year', 'Style', 'Grape Variety', 'Region', 'Price', '']],
       body: tableBody,
       margin: { left: marginLeft, right: marginRight },
       tableWidth: contentWidth,
       styles: {
-        fontSize: 8.5,
+        fontSize: 8,
         cellPadding: { top: 2.5, bottom: 2.5, left: 3, right: 3 },
         textColor: [50, 45, 35],
         lineColor: [220, 215, 200],
@@ -203,18 +218,18 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
         fillColor: [255, 255, 255],
       },
       columnStyles: {
-        0: { cellWidth: 30 },
-        1: { cellWidth: 35 },
-        2: { cellWidth: 20 },
-        3: { cellWidth: 28 },
-        4: { cellWidth: 24 },
-        5: { cellWidth: 'auto', halign: 'right', fontStyle: 'bold', textColor: [oliveR, oliveG, oliveB] },
-        6: { cellWidth: 20, halign: 'center', fontStyle: 'bold', textColor: [soldOutR, soldOutG, soldOutB], fontSize: 7 },
+        0: { cellWidth: 28 },
+        1: { cellWidth: 32 },
+        2: { cellWidth: 14, halign: 'center' },
+        3: { cellWidth: 18 },
+        4: { cellWidth: 26 },
+        5: { cellWidth: 22 },
+        6: { cellWidth: 'auto', halign: 'right', fontStyle: 'bold', textColor: [oliveR, oliveG, oliveB] },
+        7: { cellWidth: 18, halign: 'center', fontStyle: 'bold', textColor: [soldOutR, soldOutG, soldOutB], fontSize: 7 },
       },
-      // Color sold-out rows slightly
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       didParseCell: (data: any) => {
-        if (data.section === 'body' && data.column.index === 6 && data.cell.raw === 'SOLD OUT') {
+        if (data.section === 'body' && data.column.index === 7 && data.cell.raw === 'SOLD OUT') {
           data.cell.styles.textColor = [soldOutR, soldOutG, soldOutB];
           data.cell.styles.fontStyle = 'bold';
           data.cell.styles.fontSize = 7;
@@ -222,7 +237,7 @@ async function exportToPDF(grouped: [string, WineType[]][]): Promise<void> {
         // Dim the wine name text for sold-out rows
         if (data.section === 'body' && data.column.index === 1) {
           const rowData = data.row.raw as string[];
-          if (rowData[6] === 'SOLD OUT') {
+          if (rowData[7] === 'SOLD OUT') {
             data.cell.styles.textColor = [160, 140, 120];
           }
         }
@@ -323,6 +338,7 @@ export default function WineTable() {
         wineStyle: data.wineStyle,
         price: data.price,
         soldOut: data.soldOut,
+        year: data.year.trim() || null,
       });
       setAddOpen(false);
     } catch (err: unknown) {
@@ -345,6 +361,7 @@ export default function WineTable() {
         wineStyle: data.wineStyle,
         price: data.price,
         soldOut: data.soldOut,
+        year: data.year.trim() || null,
       });
       setEditWine(null);
     } catch (err: unknown) {
@@ -451,19 +468,22 @@ export default function WineTable() {
           <Table>
             <TableHeader>
               <TableRow className="bg-secondary/50 hover:bg-secondary/50 border-b border-border">
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[18%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[17%]">
                   Winery
                 </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[18%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[17%]">
                   Wine Name
                 </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[12%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[7%]">
+                  Year
+                </TableHead>
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[11%]">
                   Style
                 </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[15%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[14%]">
                   Grape
                 </TableHead>
-                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[13%]">
+                <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground w-[12%]">
                   Region
                 </TableHead>
                 <TableHead className="font-sans font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right w-[10%]">
@@ -486,6 +506,9 @@ export default function WineTable() {
                   </TableCell>
                   <TableCell className="font-medium text-foreground py-3.5 font-serif">
                     {wine.wineName}
+                  </TableCell>
+                  <TableCell className="py-3.5 text-sm text-foreground/60 tabular-nums">
+                    {wine.year ?? <span className="text-muted-foreground/40">—</span>}
                   </TableCell>
                   <TableCell className="py-3.5">
                     <span className="inline-flex items-center gap-1.5 text-sm text-foreground/80">
@@ -540,14 +563,6 @@ export default function WineTable() {
           </Table>
         </section>
       ))}
-
-      {/* Mutation error banner */}
-      {mutationError && (
-        <div className="flex items-center gap-3 text-destructive bg-destructive/10 px-4 py-3 rounded-md mt-2">
-          <AlertCircle className="h-4 w-4 flex-shrink-0" />
-          <p className="text-sm">{mutationError}</p>
-        </div>
-      )}
 
       {/* Add Wine Modal */}
       <WineFormModal

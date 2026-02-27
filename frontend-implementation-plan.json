@@ -1,54 +1,95 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add 'Sold Out' flag to wines — form toggle, table indicator, and PDF marker",
+  "title": "Add Year field to wine form, display uploaded logo in page header and PDF",
   "requirements": [
     {
-      "id": "REQ-24",
-      "summary": "Add 'Sold Out' checkbox to the Add/Edit Wine modal form",
+      "id": "REQ-27",
+      "summary": "Add optional 'Year' field to wine form modal after Wine Name and before Wine Style",
       "acceptanceCriteria": [
-        "The Add/Edit Wine modal displays a 'Sold Out' checkbox or toggle.",
-        "The field is pre-populated correctly when editing an existing wine.",
-        "Submitting the form with 'Sold Out' checked saves the flag to the backend.",
-        "Submitting with it unchecked saves false."
+        "A 'Year' input field appears in the Add/Edit Wine modal form",
+        "The field is optional (not required for form submission)",
+        "The field accepts a 4-digit year value",
+        "The field is positioned after the Wine Name field and before the Wine Style field",
+        "The Year value is included in the form submission payload",
+        "When editing an existing wine, the Year field is pre-populated with the stored value"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/WineFormModal.tsx",
           "operation": "modify",
-          "description": "Add a 'Sold Out' checkbox field to the wine form. Place it near the bottom of the form, before the submit button. Include it in the form state and submission payload. When editing an existing wine, pre-populate the checkbox with the wine's soldOut value. Ensure the field is sent to the backend via addWine or updateWine as defined in the backend interface (backend.d.ts)."
+          "description": "Add 'year' field to WineFormData interface as an optional string. Add a numeric input field for Year positioned after Wine Name and before Wine Style. Configure the input to accept 4-digit year values (e.g., 2023), with proper label, placeholder, and form state binding. Ensure the field is pre-populated when editing existing wines that have a year value."
         }
       ]
     },
     {
-      "id": "REQ-25",
-      "summary": "Display 'Sold Out' badge in the wine list table",
+      "id": "REQ-29",
+      "summary": "Update query hooks to include year field and display Year in wine table",
       "acceptanceCriteria": [
-        "Wines marked as sold out display a clearly visible 'Sold Out' badge in the table.",
-        "Wines not marked as sold out show no badge.",
-        "The badge styling is consistent with the Naturavini brand palette."
+        "useQueries.ts passes the year field to addWine and updateWine backend calls",
+        "The year value returned by getAllWines is read and surfaced in the UI",
+        "The Year is displayed in the wine list table alongside the Wine Name when present",
+        "Wines without a year display normally without errors"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/hooks/useQueries.ts",
+          "operation": "modify",
+          "description": "Update the useAddWine and useUpdateWine mutations to pass the year field (as a nullable string) to the backend actor's addWine and updateWine methods. Ensure the year parameter is included in the mutation function call signature and properly forwarded to the backend."
+        },
+        {
+          "path": "frontend/src/components/WineTable.tsx",
+          "operation": "modify",
+          "description": "Display the Year value in the wine list table alongside the Wine Name. Add the year in parentheses after the wine name (e.g., 'Kalamita Malvazija (2025)') or as a small label next to it. If a wine has no year value, display the wine name normally without appending anything. Ensure the display logic gracefully handles wines without a year field."
+        }
+      ]
+    },
+    {
+      "id": "REQ-30",
+      "summary": "Display new Natura Vini logo in page header with graceful fallback",
+      "acceptanceCriteria": [
+        "The page header displays the new logo image",
+        "The logo image is served from frontend/public/assets/generated/",
+        "If the logo fails to load, the header does not break — it falls back gracefully",
+        "The logo is visually prominent and consistent with the Naturavini brand theme"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/PageHeader.tsx",
+          "operation": "modify",
+          "description": "Update the logo image source to use the generated logo at frontend/public/assets/generated/naturavini-logo-v2.dim_400x200.png. Implement an onError handler that falls back to the existing logo or plain text ('NATURA VINI') if the new logo fails to load. Ensure the logo is visually prominent and maintains the olive green header styling. Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-31",
+      "summary": "Add new logo to PDF export with graceful fallback",
+      "acceptanceCriteria": [
+        "The exported PDF displays the new Natura Vini logo at the top",
+        "If the logo image fails to load, the PDF is still generated without the logo (no crash)",
+        "The logo placement and sizing in the PDF is consistent with the brand's visual identity"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/WineTable.tsx",
           "operation": "modify",
-          "description": "Add a 'Sold Out' badge/label to each wine row where soldOut is true. Display the badge in or near the Wine Name column. Style it as a small pill/tag using the tangerine-orange color from the brand palette (or a muted red). Use consistent spacing and typography. Wines with soldOut = false should show no badge."
+          "description": "Update the PDF export function to load and render the new logo image from frontend/public/assets/generated/naturavini-logo-v2.dim_400x200.png at the top of the PDF. Wrap the logo loading and rendering logic in a try-catch block or use a conditional check: if the logo cannot be loaded or added to the PDF, skip rendering it and continue generating the PDF without throwing an error. Position the logo prominently at the top of the PDF with appropriate sizing (e.g., centered, 80-100mm wide)."
         }
       ]
     },
     {
-      "id": "REQ-26",
-      "summary": "Add 'SOLD OUT' marker to PDF export for sold-out wines",
+      "id": "REQ-32",
+      "summary": "Add Year column to PDF export after Wine Name column",
       "acceptanceCriteria": [
-        "Wines with soldOut = true show a 'SOLD OUT' marker in their PDF row.",
-        "Wines with soldOut = false show no marker.",
-        "The marker is visually distinct from regular cell text in the PDF."
+        "The exported PDF includes a 'Year' column after the Wine Name column",
+        "Wines with a year value display it in the Year column",
+        "Wines without a year value show a dash (—) in the Year column"
       ],
       "file_operations": [
         {
           "path": "frontend/src/components/WineTable.tsx",
           "operation": "modify",
-          "description": "Update the PDF export logic (using jsPDF) to include a 'SOLD OUT' text marker for wines where soldOut is true. Add the marker next to the wine entry (e.g., in parentheses after the wine name or as a separate annotation). Make the marker visually distinct by using bold text, a different color, or special formatting. Wines with soldOut = false should have no marker in the PDF."
+          "description": "Add a 'Year' column to the PDF table output, positioned immediately after the Wine Name column. For each wine row, if the wine has a year value, display it in the Year column; otherwise, display a dash (—). Adjust the table column widths and layout to accommodate the new Year column without breaking the PDF layout. Ensure the Year column header is clearly labeled."
         }
       ]
     }

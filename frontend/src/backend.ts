@@ -103,6 +103,7 @@ export interface Wine {
     country: string;
     grapeVariety?: string;
     createdAt: Time;
+    year?: string;
     winery: string;
     soldOut: boolean;
     price: string;
@@ -137,7 +138,7 @@ export interface backendInterface {
     _caffeineStorageRefillCashier(refillInformation: _CaffeineStorageRefillInformation | null): Promise<_CaffeineStorageRefillResult>;
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
-    addWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean): Promise<void>;
+    addWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean, year: string | null): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteWine(id: string): Promise<void>;
     getCallerUserProfile(): Promise<UserProfile | null>;
@@ -146,7 +147,7 @@ export interface backendInterface {
     getWines(): Promise<Array<Wine>>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    updateWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean): Promise<void>;
+    updateWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean, year: string | null): Promise<void>;
 }
 import type { Time as _Time, UserProfile as _UserProfile, UserRole as _UserRole, Wine as _Wine, WineStyle as _WineStyle, _CaffeineStorageRefillInformation as __CaffeineStorageRefillInformation, _CaffeineStorageRefillResult as __CaffeineStorageRefillResult } from "./declarations/backend.did.d.ts";
 export class Backend implements backendInterface {
@@ -249,17 +250,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async addWine(arg0: string, arg1: string, arg2: string | null, arg3: string, arg4: string, arg5: string | null, arg6: WineStyle, arg7: string, arg8: boolean): Promise<void> {
+    async addWine(arg0: string, arg1: string, arg2: string | null, arg3: string, arg4: string, arg5: string | null, arg6: WineStyle, arg7: string, arg8: boolean, arg9: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.addWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8);
+                const result = await this.actor.addWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg9));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.addWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8);
+            const result = await this.actor.addWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg9));
             return result;
         }
     }
@@ -375,17 +376,17 @@ export class Backend implements backendInterface {
             return result;
         }
     }
-    async updateWine(arg0: string, arg1: string, arg2: string | null, arg3: string, arg4: string, arg5: string | null, arg6: WineStyle, arg7: string, arg8: boolean): Promise<void> {
+    async updateWine(arg0: string, arg1: string, arg2: string | null, arg3: string, arg4: string, arg5: string | null, arg6: WineStyle, arg7: string, arg8: boolean, arg9: string | null): Promise<void> {
         if (this.processError) {
             try {
-                const result = await this.actor.updateWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8);
+                const result = await this.actor.updateWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg9));
                 return result;
             } catch (e) {
                 this.processError(e);
                 throw new Error("unreachable");
             }
         } else {
-            const result = await this.actor.updateWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8);
+            const result = await this.actor.updateWine(arg0, arg1, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg2), arg3, arg4, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg5), to_candid_WineStyle_n9(this._uploadFile, this._downloadFile, arg6), arg7, arg8, to_candid_opt_n8(this._uploadFile, this._downloadFile, arg9));
             return result;
         }
     }
@@ -420,6 +421,7 @@ function from_candid_record_n18(_uploadFile: (file: ExternalBlob) => Promise<Uin
     country: string;
     grapeVariety: [] | [string];
     createdAt: _Time;
+    year: [] | [string];
     winery: string;
     soldOut: boolean;
     price: string;
@@ -431,6 +433,7 @@ function from_candid_record_n18(_uploadFile: (file: ExternalBlob) => Promise<Uin
     country: string;
     grapeVariety?: string;
     createdAt: Time;
+    year?: string;
     winery: string;
     soldOut: boolean;
     price: string;
@@ -443,6 +446,7 @@ function from_candid_record_n18(_uploadFile: (file: ExternalBlob) => Promise<Uin
         country: value.country,
         grapeVariety: record_opt_to_undefined(from_candid_opt_n19(_uploadFile, _downloadFile, value.grapeVariety)),
         createdAt: value.createdAt,
+        year: record_opt_to_undefined(from_candid_opt_n19(_uploadFile, _downloadFile, value.year)),
         winery: value.winery,
         soldOut: value.soldOut,
         price: value.price,

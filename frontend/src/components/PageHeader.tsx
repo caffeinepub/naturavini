@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 import { useQueryClient } from '@tanstack/react-query';
 import { LogIn, LogOut, Loader2 } from 'lucide-react';
@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 export default function PageHeader() {
   const { login, clear, loginStatus, identity } = useInternetIdentity();
   const queryClient = useQueryClient();
+  const [logoError, setLogoError] = useState(false);
 
   const isAuthenticated = !!identity;
   const isLoggingIn = loginStatus === 'logging-in';
@@ -33,12 +34,19 @@ export default function PageHeader() {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
         {/* Logo */}
         <div className="flex items-center gap-3">
-          <img
-            src="/assets/generated/naturavini-logo.dim_400x160.png"
-            alt="Natura Vini"
-            className="h-14 sm:h-16 w-auto object-contain"
-            style={{ filter: 'brightness(0) invert(1)' }}
-          />
+          {!logoError ? (
+            <img
+              src="/assets/generated/naturavini-logo-v2.dim_400x200.png"
+              alt="Natura Vini"
+              className="h-14 sm:h-16 w-auto object-contain"
+              style={{ filter: 'brightness(0) invert(1)' }}
+              onError={() => setLogoError(true)}
+            />
+          ) : (
+            <span className="text-primary-foreground font-serif text-2xl font-bold tracking-wide">
+              NATURA VINI
+            </span>
+          )}
         </div>
 
         {/* Auth button */}

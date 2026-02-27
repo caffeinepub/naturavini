@@ -27,6 +27,7 @@ export interface WineFormData {
   region: string;
   winery: string;
   wineName: string;
+  year: string;
   grapeVariety: string;
   wineStyle: WineStyle;
   price: string;
@@ -56,6 +57,7 @@ const EMPTY_FORM: WineFormData = {
   region: '',
   winery: '',
   wineName: '',
+  year: '',
   grapeVariety: '',
   wineStyle: WineStyle.red,
   price: '',
@@ -83,6 +85,7 @@ export default function WineFormModal({
           region: initialData.region ?? '',
           winery: initialData.winery,
           wineName: initialData.wineName,
+          year: initialData.year ?? '',
           grapeVariety: initialData.grapeVariety ?? '',
           wineStyle: initialData.wineStyle,
           price: initialData.price,
@@ -180,19 +183,35 @@ export default function WineFormModal({
             />
           </div>
 
-          {/* Wine Name */}
-          <div className="space-y-1.5">
-            <Label htmlFor="wineName" className="text-foreground font-medium text-sm">
-              Wine Name <span className="text-destructive">*</span>
-            </Label>
-            <Input
-              id="wineName"
-              value={form.wineName}
-              onChange={handleChange('wineName')}
-              placeholder="e.g. R6 Riserva"
-              disabled={isLoading}
-              className="bg-white border-border focus-visible:ring-primary"
-            />
+          {/* Wine Name + Year */}
+          <div className="grid grid-cols-3 gap-4">
+            <div className="col-span-2 space-y-1.5">
+              <Label htmlFor="wineName" className="text-foreground font-medium text-sm">
+                Wine Name <span className="text-destructive">*</span>
+              </Label>
+              <Input
+                id="wineName"
+                value={form.wineName}
+                onChange={handleChange('wineName')}
+                placeholder="e.g. R6 Riserva"
+                disabled={isLoading}
+                className="bg-white border-border focus-visible:ring-primary"
+              />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="year" className="text-foreground font-medium text-sm">
+                Year
+              </Label>
+              <Input
+                id="year"
+                value={form.year}
+                onChange={handleChange('year')}
+                placeholder="e.g. 2022"
+                maxLength={4}
+                disabled={isLoading}
+                className="bg-white border-border focus-visible:ring-primary"
+              />
+            </div>
           </div>
 
           {/* Grape Variety + Wine Style */}

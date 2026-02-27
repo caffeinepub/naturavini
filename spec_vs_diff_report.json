@@ -1,42 +1,33 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T20:59:43.649Z",
-  "summary": "All four requirements (REQ-23 through REQ-26) appear to be implemented in the diff. The backend adds the soldOut boolean field, migration.mo handles existing records, the form modal includes the checkbox, the table shows a badge, and the PDF export includes a SOLD OUT marker. One minor concern is that the table shows the badge in a dedicated column rather than in or near the Wine Name column as specified in REQ-25.",
+  "generatedAt": "2026-02-27T21:12:52.229Z",
+  "summary": "The diff implements all 6 requirements (REQ-27 through REQ-32). The Year field is added to the backend model, form modal, query hooks, table display, and PDF export. The logo is updated in the page header and PDF with graceful fallback handling. However, there is a minor discrepancy in REQ-30: the logo image file path referenced in code is 'naturavini-logo-v2.dim_400x200.png' (with dimension suffix) rather than 'naturavini-logo-v2.png' as specified. The WineTable.tsx diff is truncated so full verification of REQ-29 table display and REQ-31/REQ-32 PDF details cannot be confirmed from diff content alone.",
   "missing_requirements": [
     {
-      "id": "REQ-25",
-      "requirement": "The 'Sold Out' badge should be placed in or near the Wine Name column.",
-      "reason": "The file summary for WineTable.tsx states the badge is shown in 'a dedicated column for sold-out wines' rather than in or near the Wine Name column as specified in REQ-25.",
+      "id": "REQ-30",
+      "requirement": "The logo image must be stored as frontend/public/assets/generated/naturavini-logo-v2.png and rendered in the header.",
+      "reason": "The PageHeader.tsx references the image at '/assets/generated/naturavini-logo-v2.dim_400x200.png' (with a dimension suffix in the filename) rather than the specified 'naturavini-logo-v2.png'. No evidence that the file is stored at the exact required path.",
       "evidence": [
-        "frontend/src/components/WineTable.tsx",
-        "frontend-file-summaries.txt"
+        "frontend/src/components/PageHeader.tsx"
       ]
     }
   ],
   "hallucinated_features": [
     {
-      "description": "Sold-out rows are visually dimmed in the table",
-      "reason": "The file summary mentions 'slightly dims sold-out rows', which was not requested in any requirement. The requirements only ask for a badge/label on sold-out wines.",
+      "description": "A dedicated migration module (backend/migration.mo) was created to handle schema migration for existing wine records when adding the year field.",
+      "reason": "The build request only asked for the year field to default to null for existing wines without data loss. A separate migration module file was not requested — this is an implementation detail that goes beyond the stated requirements.",
       "evidence": [
-        "frontend/src/components/WineTable.tsx",
-        "frontend-file-summaries.txt"
-      ]
-    },
-    {
-      "description": "Wine Name is styled with dimmed text in the PDF for sold-out wines",
-      "reason": "The file summary mentions 'dimmed wine name styling' in the PDF export for sold-out wines. The requirement only asked for a visually distinct SOLD OUT marker, not dimming the wine name itself.",
-      "evidence": [
-        "frontend/src/components/WineTable.tsx",
-        "frontend-file-summaries.txt"
+        "backend/migration.mo"
       ]
     }
   ],
-  "confidence": 0.8,
+  "confidence": 0.78,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
+    "frontend/src/components/PageHeader.tsx",
     "frontend/src/components/WineFormModal.tsx",
     "frontend/src/components/WineTable.tsx",
     "frontend/src/hooks/useQueries.ts",

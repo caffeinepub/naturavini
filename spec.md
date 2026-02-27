@@ -1,13 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Add a "Sold Out" flag to wines that can be toggled in the edit form, displayed as a badge in the wine table, and shown as a marker in the PDF export.
+**Goal:** Add a vintage Year field to the wine form and data model, display the Natura Vini logo in the page header and PDF export, and include the Year column in the PDF.
 
 **Planned changes:**
-- Add a `soldOut` boolean field to the Wine data model in the backend, with a default of `false` for all existing and new wines
-- Update `addWine` and `updateWine` backend functions to accept and store the `soldOut` field; ensure `getAllWines` returns it
-- Add a "Sold Out" checkbox/toggle to the Add/Edit Wine modal form, pre-populated when editing and included in the submission payload
-- Display a styled "Sold Out" badge (tangerine-orange or muted red pill) on wine rows where `soldOut` is true in the wine list table
-- Update the PDF export to show a visually distinct "SOLD OUT" marker next to wines where `soldOut` is true
+- Add an optional numeric "Year" field to the Add/Edit Wine modal form, positioned after Wine Name and before Wine Style
+- Add an optional/nullable `year` field to the Wine data model in the backend; update `addWine`, `updateWine`, and `getAllWines` accordingly
+- Update frontend query hooks to pass and read the `year` field; display the year alongside the wine name in the wine list table
+- Display the new Natura Vini logo image in the page header with graceful fallback if it fails to load
+- Add the Natura Vini logo to the top of the exported PDF, skipping it gracefully if it cannot be loaded
+- Add a "Year" column to the exported PDF table (after Wine Name), showing a dash (—) for wines without a year
 
-**User-visible outcome:** Admins can mark any wine as sold out via the edit form; the sold-out status is visible as a badge in the wine table and as a clear marker in the exported PDF catalogue.
+**User-visible outcome:** Users can add and edit a vintage year for each wine, see it displayed in the wine list and PDF export, and the page header and PDF now feature the Natura Vini logo.

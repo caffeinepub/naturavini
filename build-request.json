@@ -1,97 +1,141 @@
 {
   "kind": "build_request",
-  "title": "Add 'Sold Out' flag to wines — form toggle, table indicator, and PDF marker",
-  "projectName": "Natura Vini",
+  "title": "Add Year field to wine form, display uploaded logo in page header and PDF",
+  "projectName": "Naturavini Wine List",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-23",
-      "text": "Add a 'soldOut' boolean field to the Wine data model in backend/main.mo. Update addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be false for existing and new wines.",
+      "id": "REQ-27",
+      "text": "Add a 'Year' (vintage year) numeric input field to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be optional, accept a 4-digit year (e.g. 2023), and be placed after the Wine Name field and before the Wine Style field. It must be included in the WineFormData interface and sent as part of the form submission payload.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "we also need to add the option for the yera in the wine add ox"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A 'Year' input field appears in the Add/Edit Wine modal form",
+        "The field is optional (not required for form submission)",
+        "The field accepts a 4-digit year value",
+        "The field is positioned after the Wine Name field and before the Wine Style field",
+        "The Year value is included in the form submission payload",
+        "When editing an existing wine, the Year field is pre-populated with the stored value"
+      ]
+    },
+    {
+      "id": "REQ-28",
+      "text": "Add a 'year' optional field (nullable text or Nat) to the Wine data model in backend/main.mo. Update the addWine and updateWine function signatures to accept this field, and ensure getAllWines returns it. Default value must be null/empty for existing wines.",
       "target": "backend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "can we ad up a sign like in the old price list that mark up if a wine is sold out may in the edit section of thewines and then shown on the app and the pdf"
+          "we also need to add the option for the yera in the wine add ox"
         ]
       },
       "acceptanceCriteria": [
-        "The Wine record type includes a 'soldOut' boolean field.",
-        "addWine accepts a soldOut parameter and stores it.",
-        "updateWine accepts a soldOut parameter and updates it.",
-        "getAllWines returns the soldOut field for every wine.",
-        "Existing wines without the field default to soldOut = false after upgrade."
+        "The Wine record type in backend/main.mo includes a 'year' field (optional/nullable)",
+        "addWine accepts the year field",
+        "updateWine accepts and stores the year field",
+        "getAllWines returns the year field for each wine",
+        "Existing wines without a year default to null/empty without data loss"
       ]
     },
     {
-      "id": "REQ-24",
-      "text": "Add a 'Sold Out' checkbox/toggle to the Add/Edit Wine modal form (frontend/src/components/WineFormModal.tsx). The field should be placed near the bottom of the form before the submit button, labelled 'Sold Out'. It must be included in the form submission payload sent to the backend.",
+      "id": "REQ-29",
+      "text": "Update the frontend wine query hooks in frontend/src/hooks/useQueries.ts to include the 'year' field when calling addWine and updateWine, and to read it from getAllWines results. Also display the Year value in the wine list table (frontend/src/components/WineTable.tsx) as part of the Wine Name column (e.g. appended in parentheses or as a small label), if present.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "may in the edit section of thewines"
+          "we also need to add the option for the yera in the wine add ox"
         ]
       },
       "acceptanceCriteria": [
-        "The Add/Edit Wine modal displays a 'Sold Out' checkbox or toggle.",
-        "The field is pre-populated correctly when editing an existing wine.",
-        "Submitting the form with 'Sold Out' checked saves the flag to the backend.",
-        "Submitting with it unchecked saves false."
+        "useQueries.ts passes the year field to addWine and updateWine backend calls",
+        "The year value returned by getAllWines is read and surfaced in the UI",
+        "The Year is displayed in the wine list table alongside the Wine Name when present",
+        "Wines without a year display normally without errors"
       ]
     },
     {
-      "id": "REQ-25",
-      "text": "In the wine list table (frontend/src/components/WineTable.tsx), display a visible 'Sold Out' badge or label on each wine row where soldOut is true. The indicator should be styled consistently with the Naturavini brand (e.g. a small tangerine-orange or muted red pill/tag with the text 'Sold Out'), placed in or near the Wine Name column.",
+      "id": "REQ-30",
+      "text": "Update the page header (frontend/src/components/PageHeader.tsx) to display the newly generated uploaded-style logo image (a wine glass illustration with grape cluster and 'NATURA VINI' wordmark). The logo image must be stored as frontend/public/assets/generated/naturavini-logo-v2.png and rendered in the header. If image generation fails or the image cannot be loaded, fall back gracefully to the existing logo or plain text.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "then shown on the app"
+          "can you please add up this logo also in the page and pdf file",
+          "if not exlude it"
         ]
       },
       "acceptanceCriteria": [
-        "Wines marked as sold out display a clearly visible 'Sold Out' badge in the table.",
-        "Wines not marked as sold out show no badge.",
-        "The badge styling is consistent with the Naturavini brand palette."
+        "The page header displays the new logo image",
+        "The logo image is served from frontend/public/assets/generated/",
+        "If the logo fails to load, the header does not break — it falls back gracefully",
+        "The logo is visually prominent and consistent with the Naturavini brand theme"
       ]
     },
     {
-      "id": "REQ-26",
-      "text": "Update the PDF export in frontend/src/components/WineTable.tsx so that wines marked as soldOut display a 'SOLD OUT' text marker or stamp next to their entry in the exported PDF. The marker should be visually distinct (e.g. bold, coloured, or in parentheses) so it is clearly identifiable in the printed catalogue.",
+      "id": "REQ-31",
+      "text": "Update the PDF export in frontend/src/components/WineTable.tsx to use the new logo image (frontend/public/assets/generated/naturavini-logo-v2.png) at the top of the exported PDF. If the logo image cannot be loaded at PDF generation time, skip rendering the logo in the PDF rather than throwing an error.",
       "target": "frontend",
       "source": {
         "messageIds": [
           "msg-4"
         ],
         "quotes": [
-          "and the pdf"
+          "can you please add up this logo also in the page and pdf file",
+          "if not exlude it"
         ]
       },
       "acceptanceCriteria": [
-        "Wines with soldOut = true show a 'SOLD OUT' marker in their PDF row.",
-        "Wines with soldOut = false show no marker.",
-        "The marker is visually distinct from regular cell text in the PDF."
+        "The exported PDF displays the new Natura Vini logo at the top",
+        "If the logo image fails to load, the PDF is still generated without the logo (no crash)",
+        "The logo placement and sizing in the PDF is consistent with the brand's visual identity"
+      ]
+    },
+    {
+      "id": "REQ-32",
+      "text": "Update the PDF export in frontend/src/components/WineTable.tsx to include the 'Year' column in the exported wine catalogue table, placed after the Wine Name column. If a wine has no year value, the cell should display a dash (—).",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "we also need to add the option for the yera in the wine add ox"
+        ]
+      },
+      "acceptanceCriteria": [
+        "The exported PDF includes a 'Year' column after the Wine Name column",
+        "Wines with a year value display it in the Year column",
+        "Wines without a year value show a dash (—) in the Year column"
       ]
     }
   ],
   "constraints": [
-    "Do not change the frontend/src/hooks/useActor.ts, frontend/src/hooks/useInternetIdentity.ts, frontend/src/main.tsx, or any files under frontend/src/components/ui.",
-    "Backend changes must use stable variables to ensure sold-out data persists across canister upgrades.",
-    "Generate migration.mo to handle the new soldOut field on existing wine records."
+    "If the new logo image cannot be loaded in the PDF, skip it gracefully — do not throw an error or break the export",
+    "The 'year' field must be optional/nullable in the backend to avoid breaking existing wine records",
+    "Do not modify any files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui"
   ],
   "nonGoals": [
-    "Adding any other new wine fields beyond soldOut.",
-    "Filtering or hiding sold-out wines from the list.",
-    "Any changes to authentication or user roles."
+    "Changing the existing wine style options or other existing form fields",
+    "Redesigning the overall page layout or visual theme",
+    "Adding server-side PDF generation"
   ],
   "imageRequirements": {
-    "required": [],
+    "required": [
+      "Premium wine brand logo featuring a wine glass illustration with a grape cluster, bold 'NATURA VINI' wordmark in dark purple or deep burgundy, clean white background, elegant serif typography (naturavini-logo-v2.dim_400x200.png)"
+    ],
     "edits": []
   }
 }

@@ -14,6 +14,7 @@ export interface Wine {
     country: string;
     grapeVariety?: string;
     createdAt: Time;
+    year?: string;
     winery: string;
     soldOut: boolean;
     price: string;
@@ -37,7 +38,7 @@ export enum WineStyle {
     white = "white"
 }
 export interface backendInterface {
-    addWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean): Promise<void>;
+    addWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean, year: string | null): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
     deleteWine(id: string): Promise<void>;
     getCallerUserProfile(): Promise<UserProfile | null>;
@@ -46,5 +47,5 @@ export interface backendInterface {
     getWines(): Promise<Array<Wine>>;
     isCallerAdmin(): Promise<boolean>;
     saveCallerUserProfile(profile: UserProfile): Promise<void>;
-    updateWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean): Promise<void>;
+    updateWine(id: string, country: string, region: string | null, winery: string, wineName: string, grapeVariety: string | null, wineStyle: WineStyle, price: string, soldOut: boolean, year: string | null): Promise<void>;
 }

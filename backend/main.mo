@@ -10,11 +10,8 @@ import Migration "migration";
 
 (with migration = Migration.run)
 actor {
-  // Use RBAC system for authorization
   let accessControlState = AccessControl.initState();
   include MixinAuthorization(accessControlState);
-
-  // Mixin for blob storage (not used for current logic)
   include MixinStorage();
 
   public type UserProfile = {
@@ -64,6 +61,7 @@ actor {
     price : Text;
     createdAt : Time.Time;
     soldOut : Bool;
+    year : ?Text;
   };
 
   let wines = Map.empty<Text, Wine>();
@@ -85,6 +83,7 @@ actor {
     wineStyle : WineStyle,
     price : Text,
     soldOut : Bool,
+    year : ?Text,
   ) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can add wines");
@@ -103,6 +102,7 @@ actor {
       price;
       createdAt = Time.now();
       soldOut;
+      year;
     };
     wines.add(id, newWine);
   };
@@ -117,6 +117,7 @@ actor {
     wineStyle : WineStyle,
     price : Text,
     soldOut : Bool,
+    year : ?Text,
   ) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #admin))) {
       Runtime.trap("Unauthorized: Only admins can update wines");
@@ -137,6 +138,7 @@ actor {
           price;
           createdAt = existingWine.createdAt;
           soldOut;
+          year;
         };
         wines.add(id, updatedWine);
       };
@@ -170,6 +172,7 @@ actor {
         price = "150 HRK";
         createdAt = Time.now();
         soldOut = false;
+        year = ?"2019";
       },
       {
         id = "hr-2";
@@ -182,6 +185,7 @@ actor {
         price = "90 HRK";
         createdAt = Time.now();
         soldOut = false;
+        year = ?"2020";
       },
       {
         id = "hr-3";
@@ -194,6 +198,7 @@ actor {
         price = "250 HRK";
         createdAt = Time.now();
         soldOut = false;
+        year = ?"2016";
       },
       {
         id = "it-1";
@@ -206,6 +211,7 @@ actor {
         price = "100 EUR";
         createdAt = Time.now();
         soldOut = false;
+        year = ?"2019";
       },
       {
         id = "it-2";
@@ -218,6 +224,7 @@ actor {
         price = "200 EUR";
         createdAt = Time.now();
         soldOut = false;
+        year = ?"2016";
       },
       {
         id = "it-3";
@@ -230,6 +237,7 @@ actor {
         price = "25 EUR";
         createdAt = Time.now();
         soldOut = false;
+        year = ?"2022";
       },
     ];
 

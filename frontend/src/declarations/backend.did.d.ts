@@ -21,6 +21,7 @@ export interface Wine {
   'country' : string,
   'grapeVariety' : [] | [string],
   'createdAt' : Time,
+  'year' : [] | [string],
   'winery' : string,
   'soldOut' : boolean,
   'price' : string,
@@ -72,6 +73,7 @@ export interface _SERVICE {
       WineStyle,
       string,
       boolean,
+      [] | [string],
     ],
     undefined
   >,
@@ -94,6 +96,7 @@ export interface _SERVICE {
       WineStyle,
       string,
       boolean,
+      [] | [string],
     ],
     undefined
   >,
