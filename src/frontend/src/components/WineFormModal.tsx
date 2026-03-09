@@ -57,6 +57,64 @@ const WINE_STYLE_OPTIONS: { value: WineStyle; label: string }[] = [
   { value: WineStyle.petNat, label: "Pét-Nat" },
 ];
 
+const EUROPEAN_COUNTRIES = [
+  "Albania",
+  "Andorra",
+  "Armenia",
+  "Austria",
+  "Azerbaijan",
+  "Belarus",
+  "Belgium",
+  "Bosnia and Herzegovina",
+  "Bulgaria",
+  "Croatia",
+  "Cyprus",
+  "Czech Republic",
+  "Denmark",
+  "Estonia",
+  "Finland",
+  "France",
+  "Georgia",
+  "Germany",
+  "Greece",
+  "Hungary",
+  "Iceland",
+  "Ireland",
+  "Italy",
+  "Kosovo",
+  "Latvia",
+  "Liechtenstein",
+  "Lithuania",
+  "Luxembourg",
+  "Malta",
+  "Moldova",
+  "Monaco",
+  "Montenegro",
+  "Netherlands",
+  "North Macedonia",
+  "Norway",
+  "Poland",
+  "Portugal",
+  "Romania",
+  "Russia",
+  "San Marino",
+  "Serbia",
+  "Slovakia",
+  "Slovenia",
+  "Spain",
+  "Sweden",
+  "Switzerland",
+  "Turkey",
+  "Ukraine",
+  "United Kingdom",
+];
+
+const CURRENT_YEAR = new Date().getFullYear();
+const YEAR_OPTIONS: string[] = [];
+for (let y = CURRENT_YEAR; y >= 1970; y--) {
+  YEAR_OPTIONS.push(String(y));
+}
+
 const EMPTY_FORM: WineFormData = {
   country: "",
   region: "",
@@ -116,7 +174,10 @@ export default function WineFormModal({
     };
 
   const handleSelectChange = (field: keyof WineFormData) => (value: string) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
+    setForm((prev) => ({
+      ...prev,
+      [field]: value === "__none__" ? "" : value,
+    }));
     setValidationError(null);
   };
 
@@ -148,7 +209,7 @@ export default function WineFormModal({
         if (!v && !isLoading) onClose();
       }}
     >
-      <DialogContent className="sm:max-w-lg bg-[oklch(0.99_0.008_80)] border border-border shadow-catalogue">
+      <DialogContent className="sm:max-w-xl bg-[oklch(0.99_0.008_80)] border border-border shadow-catalogue">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl text-foreground">
             {isEditing ? "Edit Wine" : "Add New Wine"}
@@ -170,15 +231,29 @@ export default function WineFormModal({
               >
                 Country <span className="text-destructive">*</span>
               </Label>
-              <Input
-                id="country"
-                value={form.country}
-                onChange={handleChange("country")}
-                placeholder="e.g. Croatia"
+              <Select
+                value={form.country || "__none__"}
+                onValueChange={handleSelectChange("country")}
                 disabled={isLoading}
-                className="bg-white border-border focus-visible:ring-primary"
-                data-ocid="wine.input"
-              />
+              >
+                <SelectTrigger
+                  id="country"
+                  className="bg-white border-border focus:ring-primary w-full"
+                  data-ocid="wine.select"
+                >
+                  <SelectValue placeholder="Select country" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-border max-h-60">
+                  <SelectItem value="__none__" disabled>
+                    Select country
+                  </SelectItem>
+                  {EUROPEAN_COUNTRIES.map((c) => (
+                    <SelectItem key={c} value={c}>
+                      {c}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-1.5">
               <Label
@@ -241,15 +316,28 @@ export default function WineFormModal({
               >
                 Year
               </Label>
-              <Input
-                id="year"
-                value={form.year}
-                onChange={handleChange("year")}
-                placeholder="e.g. 2022"
-                maxLength={4}
+              <Select
+                value={form.year || "__none__"}
+                onValueChange={handleSelectChange("year")}
                 disabled={isLoading}
-                className="bg-white border-border focus-visible:ring-primary"
-              />
+              >
+                <SelectTrigger
+                  id="year"
+                  className="bg-white border-border focus:ring-primary w-full"
+                  data-ocid="wine.year.select"
+                >
+                  <SelectValue placeholder="Year" />
+                </SelectTrigger>
+                <SelectContent className="bg-white border-border max-h-60">
+                  <SelectItem value="__none__">— No year —</SelectItem>
+                  <SelectItem value="NV">NV</SelectItem>
+                  {YEAR_OPTIONS.map((y) => (
+                    <SelectItem key={y} value={y}>
+                      {y}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
@@ -286,7 +374,7 @@ export default function WineFormModal({
                 <SelectTrigger
                   id="wineStyle"
                   className="bg-white border-border focus:ring-primary w-full"
-                  data-ocid="wine.select"
+                  data-ocid="wine.style.select"
                 >
                   <SelectValue placeholder="Select style" />
                 </SelectTrigger>
@@ -349,7 +437,7 @@ export default function WineFormModal({
                 onCheckedChange={handleCheckboxChange("hotPrice")}
                 disabled={isLoading}
                 className="data-[state=checked]:bg-orange-500 data-[state=checked]:border-orange-500"
-                data-ocid="wine.checkbox"
+                data-ocid="wine.hotprice.checkbox"
               />
               <div className="flex flex-col gap-0.5">
                 <Label
@@ -372,6 +460,7 @@ export default function WineFormModal({
                 onCheckedChange={handleCheckboxChange("soldOut")}
                 disabled={isLoading}
                 className="data-[state=checked]:bg-destructive data-[state=checked]:border-destructive"
+                data-ocid="wine.soldout.checkbox"
               />
               <div className="flex flex-col gap-0.5">
                 <Label
