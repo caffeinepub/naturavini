@@ -37,7 +37,10 @@ export function useAddWine() {
       hotPrice: boolean;
       year: string | null;
     }) => {
-      if (!actor) throw new Error("Actor not available");
+      if (!actor)
+        throw new Error(
+          "Actor not available — please wait a moment and try again.",
+        );
       await actor.addWine(
         wine.id,
         wine.country,
@@ -83,7 +86,10 @@ export function useUpdateWine() {
       hotPrice: boolean;
       year: string | null;
     }) => {
-      if (!actor) throw new Error("Actor not available");
+      if (!actor)
+        throw new Error(
+          "Actor not available — please wait a moment and try again.",
+        );
       await actor.updateWine(
         wine.id,
         wine.country,
@@ -117,7 +123,10 @@ export function useDeleteWine() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      if (!actor) throw new Error("Actor not available");
+      if (!actor)
+        throw new Error(
+          "Actor not available — please wait a moment and try again.",
+        );
       await actor.deleteWine(id);
     },
     onSuccess: () => {

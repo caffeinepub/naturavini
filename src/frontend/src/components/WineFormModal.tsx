@@ -209,7 +209,7 @@ export default function WineFormModal({
         if (!v && !isLoading) onClose();
       }}
     >
-      <DialogContent className="sm:max-w-xl bg-[oklch(0.99_0.008_80)] border border-border shadow-catalogue">
+      <DialogContent className="sm:max-w-xl bg-[oklch(0.99_0.008_80)] border border-border shadow-catalogue max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl text-foreground">
             {isEditing ? "Edit Wine" : "Add New Wine"}
