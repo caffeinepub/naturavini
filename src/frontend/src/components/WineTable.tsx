@@ -697,7 +697,7 @@ export default function WineTable() {
     setMutationError(null);
     try {
       const id = generateId(data.country, data.winery, data.wineName);
-      await addWine.mutateAsync({
+      await (addWine.mutateAsync as any)({
         id,
         country: data.country,
         region: data.region.trim() || null,
@@ -708,7 +708,9 @@ export default function WineTable() {
         price: data.price,
         soldOut: data.soldOut,
         hotPrice: data.hotPrice,
+        lowStock: data.lowStock,
         year: data.year.trim() || null,
+        notes: data.notes.trim() || null,
       });
       if (data.notes.trim()) {
         setNote(id, data.notes);
@@ -724,7 +726,7 @@ export default function WineTable() {
     if (!editWine) return;
     setMutationError(null);
     try {
-      await updateWine.mutateAsync({
+      await (updateWine.mutateAsync as any)({
         id: editWine.id,
         country: data.country,
         region: data.region.trim() || null,
@@ -735,7 +737,9 @@ export default function WineTable() {
         price: data.price,
         soldOut: data.soldOut,
         hotPrice: data.hotPrice,
+        lowStock: data.lowStock,
         year: data.year.trim() || null,
+        notes: data.notes.trim() || null,
       });
       setNote(editWine.id, data.notes);
       setEditWine(null);
@@ -963,7 +967,7 @@ export default function WineTable() {
                         }`}
                         data-ocid={`wine.item.${idx + 1}`}
                       >
-                        {/* Hot Price */}
+                        {/* Hot Price / Low Stock */}
                         <TableCell className="text-center px-1">
                           {wine.hotPrice && (
                             <span className="inline-flex flex-col items-center justify-center leading-none">
@@ -973,6 +977,17 @@ export default function WineTable() {
                                 style={{ color: "#c05010" }}
                               >
                                 HOT
+                              </span>
+                            </span>
+                          )}
+                          {(wine as any).lowStock && !wine.hotPrice && (
+                            <span className="inline-flex flex-col items-center justify-center leading-none">
+                              <span className="text-base leading-none">⚠️</span>
+                              <span
+                                className="text-[8px] font-bold uppercase tracking-tight leading-none mt-0.5"
+                                style={{ color: "#92600a" }}
+                              >
+                                LOW
                               </span>
                             </span>
                           )}

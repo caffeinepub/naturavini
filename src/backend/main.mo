@@ -76,12 +76,14 @@ actor {
     createdAt : Time.Time;
     soldOut : Bool;
     hotPrice : Bool;
+    lowStock : Bool;
     year : ?Text;
     notes : ?Text;
   };
 
   let wines = Map.empty<Text, WineRecord>();
   let hotPrices = Map.empty<Text, Bool>();
+  let lowStocks = Map.empty<Text, Bool>();
   let wineNotes = Map.empty<Text, Text>();
 
   func toWine(r : WineRecord) : Wine = {
@@ -96,6 +98,7 @@ actor {
     createdAt = r.createdAt;
     soldOut = r.soldOut;
     hotPrice = switch (hotPrices.get(r.id)) { case (?v) v; case null false };
+    lowStock = switch (lowStocks.get(r.id)) { case (?v) v; case null false };
     year = r.year;
     notes = wineNotes.get(r.id);
   };
@@ -115,6 +118,7 @@ actor {
     price : Text,
     soldOut : Bool,
     hotPrice : Bool,
+    lowStock : Bool,
     year : ?Text,
     notes : ?Text,
   ) : async () {
@@ -139,6 +143,7 @@ actor {
     };
     wines.add(id, newWine);
     hotPrices.add(id, hotPrice);
+    lowStocks.add(id, lowStock);
     switch (notes) {
       case (?n) { if (n != "") { wineNotes.add(id, n) } };
       case null {};
@@ -156,6 +161,7 @@ actor {
     price : Text,
     soldOut : Bool,
     hotPrice : Bool,
+    lowStock : Bool,
     year : ?Text,
     notes : ?Text,
   ) : async () {
@@ -182,6 +188,7 @@ actor {
         };
         wines.add(id, updatedWine);
         hotPrices.add(id, hotPrice);
+        lowStocks.add(id, lowStock);
         switch (notes) {
           case (?n) {
             if (n != "") { wineNotes.add(id, n) } else { wineNotes.remove(id) };
@@ -203,6 +210,7 @@ actor {
       case (_) {
         wines.remove(id);
         hotPrices.remove(id);
+        lowStocks.remove(id);
         wineNotes.remove(id);
       };
     };
@@ -212,6 +220,7 @@ actor {
     if (not wines.containsKey(r.id)) {
       wines.add(r.id, r);
       hotPrices.add(r.id, false);
+      lowStocks.add(r.id, false);
     };
   };
 

@@ -35,13 +35,16 @@ export function useAddWine() {
       price: string;
       soldOut: boolean;
       hotPrice: boolean;
+      lowStock: boolean;
       year: string | null;
+      notes: string | null;
     }) => {
       if (!actor)
         throw new Error(
           "Actor not available — please wait a moment and try again.",
         );
-      await actor.addWine(
+      // Cast to any because backend.ts types may lag behind the deployed canister
+      await (actor as any).addWine(
         wine.id,
         wine.country,
         wine.region,
@@ -52,7 +55,9 @@ export function useAddWine() {
         wine.price,
         wine.soldOut,
         wine.hotPrice,
+        wine.lowStock,
         wine.year,
+        wine.notes,
       );
     },
     onSuccess: () => {
@@ -84,13 +89,16 @@ export function useUpdateWine() {
       price: string;
       soldOut: boolean;
       hotPrice: boolean;
+      lowStock: boolean;
       year: string | null;
+      notes: string | null;
     }) => {
       if (!actor)
         throw new Error(
           "Actor not available — please wait a moment and try again.",
         );
-      await actor.updateWine(
+      // Cast to any because backend.ts types may lag behind the deployed canister
+      await (actor as any).updateWine(
         wine.id,
         wine.country,
         wine.region,
@@ -101,7 +109,9 @@ export function useUpdateWine() {
         wine.price,
         wine.soldOut,
         wine.hotPrice,
+        wine.lowStock,
         wine.year,
+        wine.notes,
       );
     },
     onSuccess: () => {
