@@ -35,7 +35,6 @@ export interface WineFormData {
   price: string;
   soldOut: boolean;
   hotPrice: boolean;
-  lowStock: boolean;
   notes: string;
 }
 
@@ -127,7 +126,6 @@ const EMPTY_FORM: WineFormData = {
   price: "",
   soldOut: false,
   hotPrice: false,
-  lowStock: false,
   notes: "",
 };
 
@@ -159,8 +157,6 @@ export default function WineFormModal({
           price: initialData.price,
           soldOut: initialData.soldOut ?? false,
           hotPrice: initialData.hotPrice ?? false,
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          lowStock: (initialData as any).lowStock ?? false,
           notes: initialNotes,
         });
       } else {
@@ -186,8 +182,7 @@ export default function WineFormModal({
   };
 
   const handleCheckboxChange =
-    (field: "soldOut" | "hotPrice" | "lowStock") =>
-    (checked: boolean | "indeterminate") => {
+    (field: "soldOut" | "hotPrice") => (checked: boolean | "indeterminate") => {
       setForm((prev) => ({ ...prev, [field]: checked === true }));
     };
 
@@ -214,7 +209,7 @@ export default function WineFormModal({
         if (!v && !isLoading) onClose();
       }}
     >
-      <DialogContent className="sm:max-w-xl bg-[oklch(0.99_0.008_80)] border border-border shadow-catalogue max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-xl bg-[oklch(0.99_0.008_80)] border border-border shadow-catalogue">
         <DialogHeader>
           <DialogTitle className="font-serif text-xl text-foreground">
             {isEditing ? "Edit Wine" : "Add New Wine"}
@@ -480,28 +475,6 @@ export default function WineFormModal({
                 </p>
               </div>
             </div>
-            {/* Low Stock */}
-            <div className="flex items-center gap-3 rounded-md border border-amber-200 bg-amber-50 px-4 py-3">
-              <Checkbox
-                id="lowStock"
-                checked={form.lowStock}
-                onCheckedChange={handleCheckboxChange("lowStock")}
-                disabled={isLoading}
-                className="data-[state=checked]:bg-amber-500 data-[state=checked]:border-amber-500"
-                data-ocid="wine.lowstock.checkbox"
-              />
-              <div className="flex flex-col gap-0.5">
-                <Label
-                  htmlFor="lowStock"
-                  className="text-amber-800 font-medium text-sm cursor-pointer leading-none flex items-center gap-1.5"
-                >
-                  <span>⚠️</span> Mark as Low Stock
-                </Label>
-                <p className="text-amber-700/70 text-xs">
-                  Flags this wine as low stock on the list and PDF.
-                </p>
-              </div>
-            </div>
           </div>
 
           {displayError && (
@@ -510,7 +483,7 @@ export default function WineFormModal({
             </p>
           )}
 
-          <DialogFooter className="gap-2 pt-4 border-t border-border bg-white">
+          <DialogFooter className="gap-2 pt-2">
             <Button
               type="button"
               variant="outline"
